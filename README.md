@@ -10,10 +10,12 @@ Tidal (ghci).
 
 You can start livecoding with Vim simply by running:
 
-    $ vimtidal
+    $ tidalvim
 
 This creates a tmux session with Vim, Tidal and Dirt running on different
 panes.
+
+![](http://i.imgur.com/3aXukEq.png)
 
 ## Install ##
 
@@ -58,10 +60,10 @@ Plugin "https://github.com/munshkr/vim-tidal"
   * Restart Vim and execute `:PluginInstall` to automatically download and
     install the plugins.
 
-Finally, create a symbolic link to `vimtidal` from somewhere along your `PATH`,
+Finally, create a symbolic link to `tidalvim` from somewhere along your `PATH`,
 for example:
 
-    $ sudo ln -s ~/.vim/bundle/vim-tidal/bin/vimtidal /usr/local/bin
+    $ sudo ln -s ~/.vim/bundle/vim-tidal/bin/tidalvim /usr/local/bin/
 
 ## Configuration ##
 
