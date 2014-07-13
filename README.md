@@ -70,5 +70,23 @@ for example:
 
 ## Configuration ##
 
-TODO
+*TODO* There are no options yet, but there are some variables inside `tidalvim`
+that you can change:
 
+```bash
+DEFAULT_PATH=~
+DEFAULT_FILE=foo.tidal
+DIRT_PATH=~/dirt
+DIRT_OPTIONS=
+```
+
+* `DEFAULT_PATH` is where Vim will start up.
+* `DEFAULT_FILE` is the file that will open first. The `.tidal` extension is
+  important (you can run `:setfiletype haskell.tidal` in other case)
+* `DIRT_PATH` is where Dirt lies.
+* `DIRT_OPTIONS` are extra command-line options (like `--channels` or
+  `--no-dirty-compressor`).
+
+You can also edit `BootTidal.hss` to run something else on init, like
+connecting to a Dirt [on a different
+machine/host](https://github.com/yaxu/Tidal/wiki/Multi-laptop-Tidal).

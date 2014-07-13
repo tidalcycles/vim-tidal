@@ -1,5 +1,11 @@
 #!/bin/bash
 
+DEFAULT_PATH=~
+DEFAULT_FILE=foo.tidal
+DIRT_PATH=~/dirt
+DIRT_OPTIONS=
+
+
 # Get current directory (of script)
 # http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
 SOURCE="${BASH_SOURCE[0]}"
@@ -10,7 +16,6 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-#SOCKET=tidal
 SESSION=tidal
 
 # check if tmux session "tidal" is running, attach only
@@ -21,11 +26,11 @@ tmux has-session -t $SESSION 2>/dev/null
 if [ "$?" -eq 1 ] ; then
   tmux \
     new-session -s $SESSION   \; \
-    send-keys "cd ~/tidal" C-m "vim foo.tidal" C-m  \; \
+    send-keys "cd $DEFAULT_PATH" C-m "vim $DEFAULT_FILE" C-m  \; \
     split-window -h -t $SESSION   \; \
     send-keys -t 1 "ghci -XOverloadedStrings" C-m   \; \
     split-window -v -t $SESSION   \; \
-    send-keys -t 2 "cd ~/dirt" C-m "./dirt" C-m   \; \
+    send-keys -t 2 "cd $DIRT_PATH" C-m "./dirt $DIRT_OPTIONS" C-m   \; \
     load-buffer $DIR/../BootTidal.hss   \; \
     paste-buffer -d -t 1  \; \
     select-pane -t 0
