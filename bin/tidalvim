@@ -26,10 +26,10 @@ tmux has-session -t $SESSION 2>/dev/null
 if [ "$?" -eq 1 ] ; then
   tmux \
     new-session -s $SESSION   \; \
-    send-keys "cd $DEFAULT_PATH" C-m "vim $DEFAULT_FILE" C-m  \; \
     split-window -h -t $SESSION   \; \
-    send-keys -t 1 "ghci -XOverloadedStrings" C-m   \; \
     split-window -v -t $SESSION   \; \
+    send-keys -t 0 "cd $DEFAULT_PATH" C-m "vim $DEFAULT_FILE" C-m   \; \
+    send-keys -t 1 "ghci -XOverloadedStrings" C-m   \; \
     send-keys -t 2 "cd $DIRT_PATH" C-m "./dirt $DIRT_OPTIONS" C-m   \; \
     load-buffer $DIR/../BootTidal.hss   \; \
     paste-buffer -d -t 1  \; \
