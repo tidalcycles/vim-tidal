@@ -17,8 +17,10 @@ You can start livecoding with Vim simply by running:
 This creates a tmux session with Vim, Tidal and Dirt running on different
 panes.
 
-You send the current paragraph (equivalent as typing `vip`) by pressing `C-c
-C-c`. If you visually select text, that will be sent over.
+Then, use one of these key bindings to send lines to Tidal:
+
+    * `<localleader>s`: Send current line or current visually selected block.
+    * `<localleader>ss`: Send current inner paragraph (equivalent to doing `vip`).
 
 ## Install ##
 
@@ -69,6 +71,14 @@ for example:
     $ sudo ln -s ~/.vim/bundle/vim-tidal/bin/tidalvim /usr/local/bin/
 
 ## Configuration ##
+
+By default, there are two normal keybindings and one for visual blocks using
+your `<localleader>` key.  If you don't have one defined, set it on your
+`.vimrc` script with `let maplocalleader=","`.
+
+Check `:help slime` on how to remap these keybindings.
+
+### tidalvim ###
 
 *TODO* There are no options yet, but there are some variables inside `tidalvim`
 that you can change:
