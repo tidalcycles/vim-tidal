@@ -6,6 +6,8 @@ Uses [tmux](http://tmux.sourceforge.net/) and
 [vim-slime](https://github.com/jpalardy/vim-slime) to communicate with
 Tidal (ghci).
 
+![](http://i.imgur.com/3aXukEq.png)
+
 ## Usage ##
 
 You can start livecoding with Vim simply by running:
@@ -15,7 +17,8 @@ You can start livecoding with Vim simply by running:
 This creates a tmux session with Vim, Tidal and Dirt running on different
 panes.
 
-![](http://i.imgur.com/3aXukEq.png)
+You send the current paragraph (equivalent as typing `vip`) by pressing `C-c
+C-c`. If you visually select text, that will be sent over.
 
 ## Install ##
 
