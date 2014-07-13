@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#SOCKET=tidal
+SESSION=tidal
+
+# check if tmux session "tidal" is running, attach only
+# else, create new session, split windows and run processes
+
+tmux has-session -t $SESSION 2>/dev/null
+
+if [ "$?" -eq 1 ] ; then
+  tmux \
+    new-session -s $SESSION   \; \
+    send-keys "cd ~/tidal" C-m "vim foo.tidal" C-m  \; \
+    split-window -h -t $SESSION   \; \
+    send-keys -t 1 "ghci -XOverloadedStrings" C-m   \; \
+    split-window -v -t $SESSION   \; \
+    send-keys -t 2 "cd ~/dirt" C-m "./dirt" C-m   \; \
+    load-buffer ~/tidal/BootTidal   \; \
+    paste-buffer -d -t 1  \; \
+    select-pane -t 0
+else
+  tmux attach-session -t $SESSION
+fi
