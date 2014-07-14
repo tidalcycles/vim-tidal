@@ -19,8 +19,13 @@ panes.
 
 Then, use one of these key bindings to send lines to Tidal:
 
-* `<localleader>s`: Send current line or current visually selected block.
 * `<localleader>ss`: Send current inner paragraph (equivalent to doing `vip`).
+* `<localleader>s`: Send current line or current visually selected block.
+
+There are other bindings to control Tidal like:
+
+* `<localleader>%NUM%`: Silences channel number %NUM% by sending `d%NUM% silence`.
+* `<localleader>zz`: Silences all channels by sending `hush`.
 
 ## Install ##
 
