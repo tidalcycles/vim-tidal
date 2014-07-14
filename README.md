@@ -19,8 +19,8 @@ panes.
 
 Then, use one of these key bindings to send lines to Tidal:
 
-    * `<localleader>s`: Send current line or current visually selected block.
-    * `<localleader>ss`: Send current inner paragraph (equivalent to doing `vip`).
+* `<localleader>s`: Send current line or current visually selected block.
+* `<localleader>ss`: Send current inner paragraph (equivalent to doing `vip`).
 
 ## Install ##
 
@@ -74,7 +74,7 @@ for example:
 
 By default, there are two normal keybindings and one for visual blocks using
 your `<localleader>` key.  If you don't have one defined, set it on your
-`.vimrc` script with `let maplocalleader=","`.
+`.vimrc` script with `let maplocalleader=","`, for example.
 
 Check `:help slime` on how to remap these keybindings.
 
