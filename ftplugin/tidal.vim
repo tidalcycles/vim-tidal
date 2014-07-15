@@ -37,11 +37,11 @@ xmap <buffer> <localleader>s  <Plug>SlimeRegionSend
 nmap <buffer> <localleader>s  <Plug>SlimeLineSend
 nmap <buffer> <localleader>ss <Plug>SlimeParagraphSend
 
-nmap <buffer> <localleader>zz :<c-u>call TidalHush()<cr>
+nmap <buffer> <localleader>h :<c-u>call TidalHush()<cr>
 
 let i = 1
 while i <= 9
-  execute 'nmap <buffer> <localleader>'.i.'  :<c-u>call TidalPlay('.i.')<cr>'
-  execute 'nmap <buffer> <localleader>z'.i.' :<c-u>call TidalSilence('.i.')<cr>'
+  execute 'nmap <buffer> <localleader>s'.i.'  :<c-u>call TidalPlay('.i.')<cr>'
+  execute 'nmap <buffer> <localleader>'.i.' :<c-u>call TidalSilence('.i.')<cr>'
   let i += 1
 endwhile
