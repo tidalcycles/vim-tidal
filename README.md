@@ -24,7 +24,7 @@ Then, use one of these key bindings to send lines to Tidal:
 
 There are other bindings to control Tidal like:
 
-* `<localleader>%NUM%`: Silences channel number %NUM% by sending `d%NUM% silence`.
+* `<localleader>z%NUM%`: Silences channel number %NUM% by sending `d%NUM% silence`.
 * `<localleader>zz`: Silences all channels by sending `hush`.
 
 ## Install ##
