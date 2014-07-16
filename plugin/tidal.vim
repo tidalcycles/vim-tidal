@@ -33,8 +33,24 @@ command! -nargs=1 TidalPlay call s:Play(<args>)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Configuration
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" vim-slime global options
-let g:slime_target="tmux"
-let g:slime_paste_file=tempname()
-let g:slime_default_config={"socket_name": "default", "target_pane": "tidal:0.1"}
-let g:slime_no_mappings=1
+
+""
+" vim-slime options
+"
+if !exists("g:slime_target")
+  let g:slime_target = "tmux"
+endif
+
+if !exists("g:slime_paste_file")
+  let g:slime_paste_file = tempname()
+endif
+
+if !exists("g:slime_default_config")
+  let g:slime_default_config = { "socket_name": "default", "target_pane": "tidal:0.1" }
+endif
+
+if !exists("g:tidal_no_mappings") && !exists("g:slime_no_mappings")
+  " Disable default Slime bindings
+  " and let ftplugin/tidal.vim define more vim-like bindings
+  let g:slime_no_mappings = 1
+endif

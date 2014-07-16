@@ -14,14 +14,27 @@ endfunction
 " Mappings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " vim-slime: custom mapping
-xmap <buffer> <localleader>s  <Plug>SlimeRegionSend
-nmap <buffer> <localleader>s  <Plug>SlimeLineSend
-nmap <buffer> <localleader>ss <Plug>SlimeParagraphSend
+if !exists("g:tidal_no_mappings") || !g:tidal_no_mappings
+  " Define custom Slime mappings if default are disabled
+  if g:slime_no_mappings
+    if !hasmapto('<Plug>SlimeRegionSend', 'x')
+      xmap <buffer> <localleader>s  <Plug>SlimeRegionSend
+    endif
 
-nnoremap <buffer> <localleader>h :TidalHush<cr>
-let i = 1
-while i <= 9
-  execute 'nnoremap <buffer> <localleader>'.i.'  :TidalSilence '.i.'<cr>'
-  execute 'nnoremap <buffer> <localleader>s'.i.' :TidalPlay '.i.'<cr>'
-  let i += 1
-endwhile
+    if !hasmapto('<Plug>SlimeLineSend', 'n')
+      nmap <buffer> <localleader>s  <Plug>SlimeLineSend
+    endif
+
+    if !hasmapto('<Plug>SlimeParagraphSend', 'n')
+      nmap <buffer> <localleader>ss <Plug>SlimeParagraphSend
+    endif
+  endif
+
+  nnoremap <buffer> <localleader>h :TidalHush<cr>
+  let i = 1
+  while i <= 9
+    execute 'nnoremap <buffer> <localleader>'.i.'  :TidalSilence '.i.'<cr>'
+    execute 'nnoremap <buffer> <localleader>s'.i.' :TidalPlay '.i.'<cr>'
+    let i += 1
+  endwhile
+endif
