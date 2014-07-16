@@ -1,15 +1,20 @@
+if exists("g:loaded_tidal") || &cp || v:version < 700
+  finish
+endif
+let g:loaded_tidal = 1
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Functions
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! TidalHush()
+function! s:Hush()
   execute 'SlimeSend1 hush'
 endfunction
 
-function! TidalSilence(stream)
+function! s:Silence(stream)
   execute 'SlimeSend1 d' . a:stream . ' silence'
 endfunction
 
-function! TidalPlay(stream)
+function! s:Play(stream)
   let res = search('^\s*d' . a:stream)
   if res > 0
     execute "normal! vip:SlimeSend\<cr>"
@@ -21,9 +26,9 @@ endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Commands
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-command! -nargs=0 TidalHush call TidalHush()
-command! -nargs=1 TidalSilence call TidalSilence(<args>)
-command! -nargs=1 TidalPlay call TidalPlay(<args>)
+command! -nargs=0 TidalHush call s:Hush()
+command! -nargs=1 TidalSilence call s:Silence(<args>)
+command! -nargs=1 TidalPlay call s:Play(<args>)
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Configuration
