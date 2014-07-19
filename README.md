@@ -25,10 +25,10 @@ Then, use one of these key bindings to send lines to Tidal:
 
 There are other bindings to control Tidal like:
 
-* `<localleader>s%NUM%`: Send first ocurrence of stream number %NUM%
+* `<localleader>s[N]`: Send first ocurrence of stream number `[N]`
   from the current cursor position.
-* `<localleader>%NUM%`: Silences stream number %NUM% by sending
-  `d%NUM% silence`.
+* `<localleader>[N]`: Silences stream number `[N]` by sending
+  `d[N] silence`.
 * `<localleader>h`: Silences all streams by sending `hush`.
 
 ## Install ##
@@ -67,8 +67,8 @@ For example, using Vundle:
   * Edit your `.vimrc` file and add these lines:
 
 ```vim
-Plugin "https://github.com/jpalardy/vim-slime"
-Plugin "https://github.com/munshkr/vim-tidal"
+Plugin 'munshkr/vim-tidal'
+Plugin 'jpalardy/vim-slime'
 ```
 
   * Restart Vim and execute `:PluginInstall` to automatically download and
