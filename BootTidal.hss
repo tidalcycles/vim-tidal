@@ -2,15 +2,17 @@
 
 :module Sound.Tidal.Context
 
-d1 <- dirtStream
-d2 <- dirtStream
-d3 <- dirtStream
-d4 <- dirtStream
-d5 <- dirtStream
-d6 <- dirtStream
-d7 <- dirtStream
-d8 <- dirtStream
-d9 <- dirtStream
+let newStream = stream "127.0.0.1" 7771 dirt
+
+d1 <- newStream
+d2 <- newStream
+d3 <- newStream
+d4 <- newStream
+d5 <- newStream
+d6 <- newStream
+d7 <- newStream
+d8 <- newStream
+d9 <- newStream
 
 (cps, getNow) <- bpsUtils
 
