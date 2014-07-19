@@ -71,6 +71,8 @@ Plugin 'munshkr/vim-tidal'
 Plugin 'jpalardy/vim-slime'
 ```
 
+** NOTE: vim-tidal must be loaded *before* vim-slime. The order is important **
+
   * Restart Vim and execute `:PluginInstall` to automatically download and
     install the plugins.
 
