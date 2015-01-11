@@ -102,6 +102,8 @@ function! s:TidalSendOp(type, ...) abort
 
   let &selection = sel_save
   call setreg('"', rv, rt)
+
+  call s:TidalRestoreCurPos()
 endfunction
 
 function! s:TidalSendRange() range abort
@@ -122,6 +124,18 @@ function! s:TidalSendLines(count) abort
   exe "norm! " . a:count . "yy"
   call s:TidalSend(@")
   call setreg('"', rv, rt)
+endfunction
+
+function! s:TidalStoreCurPos()
+  if g:tidal_preserve_curpos == 1
+    let s:cur = getcurpos()
+  endif
+endfunction
+
+function! s:TidalRestoreCurPos()
+  if g:tidal_preserve_curpos == 1
+    call setpos('.', s:cur)
+  endif
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -181,7 +195,7 @@ command! -nargs=0 TidalHush call s:TidalHush()
 command! -nargs=1 TidalSilence call s:TidalSilence(<args>)
 command! -nargs=1 TidalPlay call s:TidalPlay(<args>)
 
-noremap <SID>Operator :<c-u>set opfunc=<SID>TidalSendOp<cr>g@
+noremap <SID>Operator :<c-u>call <SID>TidalStoreCurPos()<cr>:set opfunc=<SID>TidalSendOp<cr>g@
 
 noremap <unique> <script> <silent> <Plug>TidalRegionSend :<c-u>call <SID>TidalSendOp(visualmode(), 1)<cr>
 noremap <unique> <script> <silent> <Plug>TidalLineSend :<c-u>call <SID>TidalSendLines(v:count1)<cr>
@@ -203,3 +217,7 @@ endif
 if !exists("g:tidal_default_config")
   let g:tidal_default_config = { "socket_name": "default", "target_pane": "tidal:0.1" }
 endif
+
+if !exists("g:tidal_preserve_curpos")
+  let g:tidal_preserve_curpos = 1
+end
