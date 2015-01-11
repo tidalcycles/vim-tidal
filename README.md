@@ -2,9 +2,9 @@
 
 A Vim plugin for [Tidal](https://github.com/yaxu/Tidal).
 
-Uses [tmux](http://tmux.sourceforge.net/) and
-[vim-slime](https://github.com/jpalardy/vim-slime) to communicate with
-Tidal (ghci).
+Uses [tmux](http://tmux.sourceforge.net/) and it is based on
+[vim-slime](https://github.com/jpalardy/vim-slime) for communication with Tidal
+(ghci).
 
 ![](http://i.imgur.com/3aXukEq.png)
 
@@ -68,10 +68,7 @@ For example, using Vundle:
 
 ```vim
 Plugin 'munshkr/vim-tidal'
-Plugin 'jpalardy/vim-slime'
 ```
-
-** NOTE: vim-tidal must be loaded *before* vim-slime. The order is important **
 
   * Restart Vim and execute `:PluginInstall` to automatically download and
     install the plugins.
@@ -86,8 +83,6 @@ for example:
 By default, there are two normal keybindings and one for visual blocks using
 your `<localleader>` key.  If you don't have one defined, set it on your
 `.vimrc` script with `let maplocalleader=","`, for example.
-
-Check `:help slime` on how to remap these keybindings.
 
 ### tidalvim ###
 

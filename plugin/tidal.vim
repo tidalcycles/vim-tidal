@@ -3,54 +3,203 @@ if exists("g:loaded_tidal") || &cp || v:version < 700
 endif
 let g:loaded_tidal = 1
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Functions
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! s:Hush()
-  execute 'SlimeSend1 hush'
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Tmux
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+function! s:TmuxSend(config, text)
+  let l:prefix = "tmux -L " . shellescape(a:config["socket_name"])
+  " use STDIN unless configured to use a file
+  if !exists("g:tidal_paste_file")
+    call system(l:prefix . " load-buffer -", a:text)
+  else
+    call s:WritePasteFile(a:text)
+    call system(l:prefix . " load-buffer " . g:tidal_paste_file)
+  end
+  call system(l:prefix . " paste-buffer -d -t " . shellescape(a:config["target_pane"]))
 endfunction
 
-function! s:Silence(stream)
-  execute 'SlimeSend1 d' . a:stream . ' silence'
+function! s:TmuxPaneNames(A,L,P)
+  let format = '#{pane_id} #{session_name}:#{window_index}.#{pane_index} #{window_name}#{?window_active, (active),}'
+  return system("tmux -L " . shellescape(b:tidal_config['socket_name']) . " list-panes -a -F " . shellescape(format))
 endfunction
 
-function! s:Play(stream)
+function! s:TmuxConfig() abort
+  if !exists("b:tidal_config")
+    let b:tidal_config = {"socket_name": "default", "target_pane": ":"}
+  end
+
+  let b:tidal_config["socket_name"] = input("tmux socket name: ", b:tidal_config["socket_name"])
+  let b:tidal_config["target_pane"] = input("tmux target pane: ", b:tidal_config["target_pane"], "custom,<SNR>" . s:SID() . "_TmuxPaneNames")
+  if b:tidal_config["target_pane"] =~ '\s\+'
+    let b:tidal_config["target_pane"] = split(b:tidal_config["target_pane"])[0]
+  endif
+endfunction
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Helpers
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+function! s:SID()
+  return matchstr(expand('<sfile>'), '<SNR>\zs\d\+\ze_SID$')
+endfun
+
+function! s:WritePasteFile(text)
+  " could check exists("*writefile")
+  call system("cat > " . g:tidal_paste_file, a:text)
+endfunction
+
+function! s:_EscapeText(text)
+  if exists("&filetype")
+    let custom_escape = "_EscapeText_" . substitute(&filetype, "[.]", "_", "g")
+    if exists("*" . custom_escape)
+      let result = call(custom_escape, [a:text])
+    end
+  end
+
+  " use a:text if the ftplugin didn't kick in
+  if !exists("result")
+    let result = a:text
+  end
+
+  " return an array, regardless
+  if type(result) == type("")
+    return [result]
+  else
+    return result
+  end
+endfunction
+
+function! s:TidalGetConfig()
+  if !exists("b:tidal_config")
+    if exists("g:tidal_default_config")
+      let b:tidal_config = g:tidal_default_config
+    end
+    call s:TidalDispatch('Config')
+  end
+endfunction
+
+function! s:TidalSendOp(type, ...) abort
+  call s:TidalGetConfig()
+
+  let sel_save = &selection
+  let &selection = "inclusive"
+  let rv = getreg('"')
+  let rt = getregtype('"')
+
+  if a:0  " Invoked from Visual mode, use '< and '> marks.
+    silent exe "normal! `<" . a:type . '`>y'
+  elseif a:type == 'line'
+    silent exe "normal! '[V']y"
+  elseif a:type == 'block'
+    silent exe "normal! `[\<C-V>`]\y"
+  else
+    silent exe "normal! `[v`]y"
+  endif
+
+  call setreg('"', @", 'V')
+  call s:TidalSend(@")
+
+  let &selection = sel_save
+  call setreg('"', rv, rt)
+endfunction
+
+function! s:TidalSendRange() range abort
+  call s:TidalGetConfig()
+
+  let rv = getreg('"')
+  let rt = getregtype('"')
+  sil exe a:firstline . ',' . a:lastline . 'yank'
+  call s:TidalSend(@")
+  call setreg('"', rv, rt)
+endfunction
+
+function! s:TidalSendLines(count) abort
+  call s:TidalGetConfig()
+
+  let rv = getreg('"')
+  let rt = getregtype('"')
+  exe "norm! " . a:count . "yy"
+  call s:TidalSend(@")
+  call setreg('"', rv, rt)
+endfunction
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Public interface
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+function! s:TidalSend(text)
+  call s:TidalGetConfig()
+
+  " this used to return a string, but some receivers (coffee-script)
+  " will flush the rest of the buffer given a special sequence (ctrl-v)
+  " so we, possibly, send many strings -- but probably just one
+  let pieces = s:_EscapeText(a:text)
+  for piece in pieces
+    call s:TidalDispatch('Send', b:tidal_config, piece)
+  endfor
+endfunction
+
+function! s:TidalConfig() abort
+  call inputsave()
+  call s:TidalDispatch('Config')
+  call inputrestore()
+endfunction
+
+" delegation
+function! s:TidalDispatch(name, ...)
+  let target = substitute(tolower(g:tidal_target), '\(.\)', '\u\1', '') " Capitalize
+  return call("s:" . target . a:name, a:000)
+endfunction
+
+function! s:TidalHush()
+  execute 'TidalSend1 hush'
+endfunction
+
+function! s:TidalSilence(stream)
+  execute 'TidalSend1 d' . a:stream . ' silence'
+endfunction
+
+function! s:TidalPlay(stream)
   let res = search('^\s*d' . a:stream)
   if res > 0
-    execute "normal! vip:SlimeSend\<cr>"
+    execute "normal! vip:TidalSend\<cr>"
   else
     echo "d" . a:stream . " was not found"
   endif
 endfunction
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Commands
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-command! -nargs=0 TidalHush call s:Hush()
-command! -nargs=1 TidalSilence call s:Silence(<args>)
-command! -nargs=1 TidalPlay call s:Play(<args>)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Setup key bindings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Configuration
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+command -bar -nargs=0 TidalConfig call s:TidalConfig()
+command -range -bar -nargs=0 TidalSend <line1>,<line2>call s:TidalSendRange()
+command -nargs=+ TidalSend1 call s:TidalSend(<q-args> . "\r")
+
+command! -nargs=0 TidalHush call s:TidalHush()
+command! -nargs=1 TidalSilence call s:TidalSilence(<args>)
+command! -nargs=1 TidalPlay call s:TidalPlay(<args>)
+
+noremap <SID>Operator :<c-u>set opfunc=<SID>TidalSendOp<cr>g@
+
+noremap <unique> <script> <silent> <Plug>TidalRegionSend :<c-u>call <SID>TidalSendOp(visualmode(), 1)<cr>
+noremap <unique> <script> <silent> <Plug>TidalLineSend :<c-u>call <SID>TidalSendLines(v:count1)<cr>
+noremap <unique> <script> <silent> <Plug>TidalMotionSend <SID>Operator
+noremap <unique> <script> <silent> <Plug>TidalParagraphSend <SID>Operatorip
+noremap <unique> <script> <silent> <Plug>TidalConfig :<c-u>TidalConfig<cr>
 
 ""
-" vim-slime options
+" Default options
 "
-if !exists("g:slime_target")
-  let g:slime_target = "tmux"
+if !exists("g:tidal_target")
+  let g:tidal_target = "tmux"
 endif
 
-if !exists("g:slime_paste_file")
-  let g:slime_paste_file = tempname()
+if !exists("g:tidal_paste_file")
+  let g:tidal_paste_file = tempname()
 endif
 
-if !exists("g:slime_default_config")
-  let g:slime_default_config = { "socket_name": "default", "target_pane": "tidal:0.1" }
-endif
-
-if !exists("g:tidal_no_mappings") && !exists("g:slime_no_mappings")
-  " Disable default Slime bindings
-  " and let ftplugin/tidal.vim define more vim-like bindings
-  let g:slime_no_mappings = 1
+if !exists("g:tidal_default_config")
+  let g:tidal_default_config = { "socket_name": "default", "target_pane": "tidal:0.1" }
 endif
