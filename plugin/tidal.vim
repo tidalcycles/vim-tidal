@@ -74,8 +74,9 @@ function! s:TidalGetConfig()
   if !exists("b:tidal_config")
     if exists("g:tidal_default_config")
       let b:tidal_config = g:tidal_default_config
+    else
+      call s:TidalDispatch('Config')
     end
-    call s:TidalDispatch('Config')
   end
 endfunction
 
