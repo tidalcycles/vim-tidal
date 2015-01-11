@@ -1,0 +1,13 @@
+0.2.0
+
+* Remove vim-slime dependency
+* Preserve cursor position when sending to tmux
+* Configure tmux automatically with defaults
+
+0.1.0
+
+* Use Slime to communicate via tmux
+* Create "tidalvim" script for creating Dirt and Tidal instances
+* Define more vim-like default bindings
+* Add bindings to silence channels
+* Add bindings for playing first occurrence of stream
