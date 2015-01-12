@@ -73,10 +73,11 @@ Plugin 'munshkr/vim-tidal'
   * Restart Vim and execute `:PluginInstall` to automatically download and
     install the plugins.
 
-Finally, create a symbolic link to `tidalvim` from somewhere along your `PATH`,
-for example:
+Finally, go to the plugin repository and run `make` to install the `tidalvim`
+script.
 
-    $ sudo ln -s ~/.vim/bundle/vim-tidal/bin/tidalvim /usr/local/bin/
+    $ cd ~/.vim/bundle/vim-tidal
+    $ sudo make install
 
 ## Configuration ##
 
