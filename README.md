@@ -84,6 +84,16 @@ By default, there are two normal keybindings and one for visual blocks using
 your `<localleader>` key.  If you don't have one defined, set it on your
 `.vimrc` script with `let maplocalleader=","`, for example.
 
+You can configure tmux socket name and target pane by typing `<localleader>c`.
+
+About the target pane:
+
+* ":" means current window, current pane (a reasonable default)
+* ":i" means the ith window, current pane
+* ":i.j" means the ith window, jth pane
+* "h:i.j" means the tmux session where h is the session identifier (either
+  session name or number), the ith window and the jth pane
+
 ### tidalvim ###
 
 *TODO* There are no options yet, but there are some variables inside `tidalvim`
