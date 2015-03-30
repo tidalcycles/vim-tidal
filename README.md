@@ -31,6 +31,24 @@ There are other bindings to control Tidal like:
   `d[N] silence`.
 * `<localleader>h`: Silences all streams by sending `hush`.
 
+### About these bindings
+
+The `<leader>` key is a special key used to perform commands with a sequence of
+keys.  The `<localleader>` key behaves as the `<leader>` key, but is *local* to
+a buffer.  In particular, the above bindings only work in buffers with the
+"tidal" file type set, e.g. files whose file type is `.tidal`
+
+By default, there is no `<localheader>` set.  To define one, e.g. for use with
+a comma (`,`), write this on your `.vimrc` file:
+
+```vim
+let maplocalleader=","
+```
+
+Reload your configuration (or restart Vim), and after typing `,ss` on a few
+lines of code, you should see those being copied onto the Tidal interpreter on
+the upper-right pane.
+
 ## Install ##
 
 ### Install tmux ###
