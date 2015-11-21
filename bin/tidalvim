@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euf -o pipefail
+
 DEFAULT_PATH=~
 DEFAULT_FILE=foo.tidal
 DIRT_PATH=~/dirt
