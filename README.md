@@ -107,10 +107,10 @@ You can configure tmux socket name and target pane by typing `<localleader>c`.
 
 About the target pane:
 
-* ":" means current window, current pane (a reasonable default)
-* ":i" means the ith window, current pane
-* ":i.j" means the ith window, jth pane
-* "h:i.j" means the tmux session where h is the session identifier (either
+* `":"` means current window, current pane (a reasonable default)
+* `":i"` means the ith window, current pane
+* `":i.j"` means the ith window, jth pane
+* `"h:i.j"` means the tmux session where h is the session identifier (either
   session name or number), the ith window and the jth pane
 
 ### tidalvim ###

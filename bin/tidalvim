@@ -2,10 +2,11 @@
 
 set -euf -o pipefail
 
-DEFAULT_PATH=~
-DEFAULT_FILE=foo.tidal
-DIRT_PATH=~/dirt
-DIRT_OPTIONS=
+DEFAULT_PATH="~"
+DEFAULT_FILE="$(date +%F).tidal"
+DIRT_PATH="~/dirt"
+DIRT_OPTIONS=""
+TIDAL_TEMPO_HOST="127.0.0.1"
 
 
 # Get current directory (of script)
@@ -31,7 +32,7 @@ if [ "$?" -eq 1 ] ; then
     split-window -h -t $SESSION   \; \
     split-window -v -t $SESSION   \; \
     send-keys -t 0 "cd $DEFAULT_PATH" C-m "vim $DEFAULT_FILE" C-m   \; \
-    send-keys -t 1 "ghci -XOverloadedStrings" C-m   \; \
+    send-keys -t 1 "TIDAL_TEMPO_IP=$TIDAL_TEMPO_HOST ghci -XOverloadedStrings" C-m   \; \
     send-keys -t 2 "cd $DIRT_PATH" C-m "./dirt $DIRT_OPTIONS" C-m   \; \
     load-buffer $DIR/../BootTidal.hss   \; \
     paste-buffer -d -t 1  \; \

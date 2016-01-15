@@ -16,7 +16,7 @@
 (d10,t10) <- dirtSetters getNow
 
 let bps x = cps (x/2)
-let hush = mapM_ ($ silence) [d1,d2,d3,d4,d5,d6,d7,d8,d9]
+let hush = mapM_ ($ silence) [d1,d2,d3,d4,d5,d6,d7,d8,d9,d10]
 let solo = (>>) hush
 
 :set prompt "tidal> "
