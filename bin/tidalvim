@@ -24,19 +24,13 @@ SESSION=tidal
 # check if tmux session "tidal" is running, attach only
 # else, create new session, split windows and run processes
 
-tmux has-session -t $SESSION 2>/dev/null
-
-if [ "$?" -eq 1 ] ; then
-  tmux \
-    new-session -s $SESSION   \; \
-    split-window -h -t $SESSION   \; \
-    split-window -v -t $SESSION   \; \
-    send-keys -t 0 "cd $DEFAULT_PATH" C-m "vim $DEFAULT_FILE" C-m   \; \
-    send-keys -t 1 "TIDAL_TEMPO_IP=$TIDAL_TEMPO_HOST ghci -XOverloadedStrings" C-m   \; \
-    send-keys -t 2 "cd $DIRT_PATH" C-m "./dirt $DIRT_OPTIONS" C-m   \; \
-    load-buffer $DIR/../BootTidal.hss   \; \
-    paste-buffer -d -t 1  \; \
-    select-pane -t 0
-else
-  tmux attach-session -t $SESSION
-fi
+tmux attach-session -t $SESSION || tmux \
+  new-session -s $SESSION   \; \
+  split-window -h -t $SESSION   \; \
+  split-window -v -t $SESSION   \; \
+  send-keys -t 0 "cd $DEFAULT_PATH" C-m "vim $DEFAULT_FILE" C-m   \; \
+  send-keys -t 1 "TIDAL_TEMPO_IP=$TIDAL_TEMPO_HOST ghci -XOverloadedStrings" C-m   \; \
+  send-keys -t 2 "cd $DIRT_PATH" C-m "./dirt $DIRT_OPTIONS" C-m   \; \
+  load-buffer $DIR/../BootTidal.hss   \; \
+  paste-buffer -d -t 1  \; \
+  select-pane -t 0
