@@ -1,13 +1,11 @@
 #!/bin/bash
-
 set -euf -o pipefail
 
-DEFAULT_PATH="~"
-DEFAULT_FILE="$(date +%F).tidal"
-DIRT_PATH="~/dirt"
-DIRT_OPTIONS=""
-TIDAL_TEMPO_HOST="127.0.0.1"
-
+FILE=${FILE:-"$(date +%F).tidal"}
+TEMPO_HOST=${TEMPO_HOST:-"127.0.0.1"}
+SESSION=${SESSION:-"tidal"}
+GHCI=${GHCI:-"ghci"}
+TMUX=${TMUX:-"tmux"}
 
 # Get current directory (of script)
 # http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
@@ -15,22 +13,22 @@ SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
   DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
   SOURCE="$(readlink "$SOURCE")"
-  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+  # if $SOURCE was a relative symlink, we need to resolve it relative to the
+  # path where the symlink file was located
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-SESSION=tidal
+BOOT_PATH=${BOOT_PATH:-"$DIR/../BootTidal.hss"}
 
-# check if tmux session "tidal" is running, attach only
+# Check if tmux session "tidal" is running, attach only
 # else, create new session, split windows and run processes
 
-tmux attach-session -t $SESSION || tmux \
+$TMUX attach-session -t $SESSION || $TMUX \
   new-session -s $SESSION   \; \
   split-window -h -t $SESSION   \; \
-  split-window -v -t $SESSION   \; \
-  send-keys -t 0 "cd $DEFAULT_PATH" C-m "vim $DEFAULT_FILE" C-m   \; \
-  send-keys -t 1 "TIDAL_TEMPO_IP=$TIDAL_TEMPO_HOST ghci -XOverloadedStrings" C-m   \; \
-  send-keys -t 2 "cd $DIRT_PATH" C-m "./dirt $DIRT_OPTIONS" C-m   \; \
-  load-buffer $DIR/../BootTidal.hss   \; \
+  send-keys -t 0 "vim $FILE" C-m   \; \
+  send-keys -t 1 "TIDAL_TEMPO_IP=$TEMPO_HOST $GHCI -XOverloadedStrings" C-m   \; \
+  load-buffer $BOOT_PATH   \; \
   paste-buffer -d -t 1  \; \
   select-pane -t 0
