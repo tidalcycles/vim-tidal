@@ -17,20 +17,6 @@ function! Get_indent_string()
     return repeat(" ", 4)
 endfunction
 
-" indent lines except for first one.
-" lines are indented equally, so indentation is preserved.
-function! Indent_lines(lines)
-    let l:lines = a:lines
-    let l:indent = Get_indent_string()
-    let l:i = 1
-    let l:len = len(l:lines)
-    while l:i < l:len
-        let l:lines[l:i] = l:indent . l:lines[l:i]
-        let l:i += 1
-    endwhile
-    return l:lines
-endfunction
-
 " replace tabs by spaces
 function! Tab_to_spaces(text)
     return substitute(a:text, "	", Get_indent_string(), "g")
@@ -94,7 +80,6 @@ function! _EscapeText_haskell_tidal(text)
     let l:text  = Remove_block_comments(a:text)
     let l:lines = Lines(Tab_to_spaces(l:text))
     let l:lines = Remove_line_comments(l:lines)
-    let l:lines = Indent_lines(l:lines)
     let l:lines = Wrap_if_multi(l:lines)
     let l:lines = Add_Cycle_Pos_Defs(l:lines)
     return Unlines(l:lines)
