@@ -97,6 +97,33 @@ script.
     $ cd ~/.vim/bundle/vim-tidal
     $ sudo make install
 
+#### Development version of Tidal (0.x-dev)
+
+If you are using Tidal from a development branch or another branch different
+than *master*, you'll have to use the corresponding branch on vim-tidal.
+
+Unfortunately Vundle doesn't support specific branches or tags when setting the
+Plugin line, but you can **pin** the plugin. This way Vundle will only clone
+the repo and not mess with it again. This also means from now on (while pinned)
+you'll have to manage the repo yourself (i.e. go to the repo dir and `git
+pull`, etc.)
+
+To sum up, pin the plugin with this:
+
+```vim
+Plugin 'munshkr/vim-tidal', {'pinned': 1}
+```
+
+Then go to where your Vundle plugins reside (usually
+`~/.vim/bundle/vim-tidal`), and change to the development branch. For example
+if you are using Tidal 0.9-dev:
+
+```bash
+$ cd ~/.vim/bundle/vim-tidal
+$ git pull
+$ git checkout 0.9-dev origin/0.9-dev
+```
+
 ## Configuration ##
 
 By default, there are two normal keybindings and one for visual blocks using
