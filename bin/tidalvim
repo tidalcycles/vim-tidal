@@ -2,7 +2,7 @@
 set -euf -o pipefail
 
 FILE=${FILE:-"$(date +%F).tidal"}
-TEMPO_HOST=${TEMPO_HOST:-"127.0.0.1"}
+TIDAL_TEMPO_IP=${TIDAL_TEMPO_IP:-"127.0.0.1"}
 SESSION=${SESSION:-"tidal"}
 GHCI=${GHCI:-"ghci"}
 TMUX=${TMUX:-"tmux"}
@@ -19,16 +19,14 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-BOOT_PATH=${BOOT_PATH:-"$DIR/../BootTidal.hss"}
+BOOT_PATH=${BOOT_PATH:-"$DIR/../Tidal.ghci"}
 
 # Check if tmux session "tidal" is running, attach only
 # else, create new session, split windows and run processes
 
 $TMUX attach-session -t $SESSION || $TMUX \
   new-session -s $SESSION   \; \
-  split-window -h -t $SESSION   \; \
+  split-window -v -t $SESSION   \; \
   send-keys -t 0 "vim $FILE" C-m   \; \
-  send-keys -t 1 "TIDAL_TEMPO_IP=$TEMPO_HOST $GHCI -XOverloadedStrings" C-m   \; \
-  load-buffer $BOOT_PATH   \; \
-  paste-buffer -d -t 1  \; \
+  send-keys -t 1 "TIDAL_TEMPO_IP=$TIDAL_TEMPO_IP $GHCI -XOverloadedStrings -ghci-script $BOOT_PATH" C-m   \; \
   select-pane -t 0

@@ -142,23 +142,33 @@ About the target pane:
 
 ### tidalvim ###
 
-*TODO* There are no options yet, but there are some variables inside `tidalvim`
-that you can change:
+There are no options yet, but most of the variables fallback to their
+respective environment variables, so they can be customized when running
+`tidalvim` or by exporting them before calling the script.  For example:
 
-```bash
-DEFAULT_PATH=~
-DEFAULT_FILE=foo.tidal
-DIRT_PATH=~/dirt
-DIRT_OPTIONS=
+```
+TIDAL_TEMPO_IP=192.168.0.15 SESSION=whatever tidalvim
 ```
 
-* `DEFAULT_PATH` is where Vim will start up.
-* `DEFAULT_FILE` is the file that will open first. The `.tidal` extension is
-  important (you can run `:setfiletype haskell.tidal` in other case)
-* `DIRT_PATH` is where Dirt lies.
-* `DIRT_OPTIONS` are extra command-line options (like `--channels` or
-  `--no-dirty-compressor`).
+This would start Tidal synced to another Tidal on 192.168.0.16, and it would
+try to attach or create a tmux sesssion called `whatever`.
 
-You can also edit `BootTidal.hss` to run something else on init, like
-connecting to a Dirt [on a different
-machine/host](https://github.com/yaxu/Tidal/wiki/Multi-laptop-Tidal).
+The following is a list of all variables that can be changed:
+
+* `FILE`: File name to open with Vim (default: `$(date +%F).tidal`, e.g.
+  `2017-03-09.tidal`).  The `.tidal` extension is important (you can run
+  `:setfiletype haskell.tidal` in case you won't use a .tidal file here).
+
+* `SESSION`: Tmux session name (default: `tidal`)
+
+* `TIDAL_TEMPO_IP`: Tells Tidal to sync tempo with another Tidal instance on
+  the specified IP (default: `127.0.0.1`, i.e. use local)
+
+* `GHCI`: GHCi command (default: `ghci`)
+
+* `TMUX`: Tmux command (default: `tmux`)
+
+* `BOOT_PATH`: Bootstrap .ghci file (Default: `Tidal.ghci`)
+
+You can also edit `Tidal.ghci` to run something else on init, like defining
+extra helper functions, or adding imports.
