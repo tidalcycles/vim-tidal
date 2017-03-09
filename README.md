@@ -14,8 +14,7 @@ You can start livecoding with Vim simply by running:
 
     $ tidalvim
 
-This creates a tmux session with Vim, Tidal and Dirt running on different
-panes.
+This creates a tmux session with Vim and Tidal running on different panes.
 
 Then, use one of these key bindings to send lines to Tidal:
 
@@ -48,6 +47,7 @@ let maplocalleader=","
 Reload your configuration (or restart Vim), and after typing `,ss` on a few
 lines of code, you should see those being copied onto the Tidal interpreter on
 the upper-right pane.
+
 
 ## Install ##
 
@@ -97,6 +97,11 @@ script.
     $ cd ~/.vim/bundle/vim-tidal
     $ sudo make install
 
+### Configure ###
+
+You probably need to set a local leader binding and configure tmux target pane.
+See the section Configuration below for more detailed instructions.
+
 #### Development version of Tidal (x.y-dev)
 
 If you are using Tidal from a development branch or another branch different
@@ -124,6 +129,7 @@ $ git pull
 $ git checkout 0.9-dev origin/0.9-dev
 ```
 
+
 ## Configuration ##
 
 By default, there are two normal keybindings and one for visual blocks using
@@ -140,7 +146,24 @@ About the target pane:
 * `"h:i.j"` means the tmux session where h is the session identifier (either
   session name or number), the ith window and the jth pane
 
-### tidalvim ###
+For customizing the startup script for defining helper functions, see below.
+
+
+## `tidalvim` and `tidal` ##
+
+This plugin comes with two Bash scripts: `tidal` and `tidalvim`.  `tidal` fires
+up GHCi and loads a bootstrap file for Tidal. You can even use it standalone
+(without Vim) by simply running `tidal` from your shell.
+
+```
+$ tidal
+GHCi, version 7.10.3: http://www.haskell.org/ghc/  :? for help
+tidal> d1 $ sound "bd sn"
+tidal> :t density 2 $ n "0 1"
+density 2 $ n "0 1" :: Pattern ParamMap
+```
+
+
 
 There are no options yet, but most of the variables fallback to their
 respective environment variables, so they can be customized when running
@@ -150,7 +173,7 @@ respective environment variables, so they can be customized when running
 TIDAL_TEMPO_IP=192.168.0.15 SESSION=whatever tidalvim
 ```
 
-This would start Tidal synced to another Tidal on 192.168.0.16, and it would
+This would start Tidal synced to another Tidal on 192.168.0.15, and it would
 try to attach or create a tmux sesssion called `whatever`.
 
 The following is a list of all variables that can be changed:
@@ -164,11 +187,49 @@ The following is a list of all variables that can be changed:
 * `TIDAL_TEMPO_IP`: Tells Tidal to sync tempo with another Tidal instance on
   the specified IP (default: `127.0.0.1`, i.e. use local)
 
+* `TIDAL_BOOT_PATH`: Tidal Bootstrap file, a .ghci file (default: `Tidal.ghci`)
+
+* `VIM`: Vim command (default: `vim`)
+
 * `GHCI`: GHCi command (default: `ghci`)
 
 * `TMUX`: Tmux command (default: `tmux`)
 
-* `BOOT_PATH`: Bootstrap .ghci file (Default: `Tidal.ghci`)
 
-You can also edit `Tidal.ghci` to run something else on init, like defining
-extra helper functions, or adding imports.
+In case you have helper functions and other imports that you want to setup, you
+can edit the `Tidal.ghci`, but I recommend that you define another `.ghci` file
+which loads `Tidal.ghci`.
+
+Here is an example:
+
+```haskell
+--file: ~/myStuff.ghci
+
+-- Bootstrap Tidal
+-- Replace this path if you have vim-tidal installed elsewhere
+:script ~/.vim/bundle/vim-tidal/Tidal.ghci
+
+:{
+let foo = every 4 $ within (0.75, 1) (density 4)
+    bar = n "<0 1 2 4>"
+:}
+```
+
+Then, run `tidal` or `tidalvim` with `TIDAL_BOOT_PATH` pointing to your new
+script file:
+
+```bash
+TIDAL_BOOT_PATH=~/myStuff.ghci tidalvim
+```
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at
+https://github.com/munshkr/vim-tidal. This project is intended to be a safe,
+welcoming space for collaboration, and contributors are expected to adhere to
+the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+
+
+## License
+
+Refer to the LICENSE file

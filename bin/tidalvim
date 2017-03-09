@@ -1,32 +1,23 @@
 #!/bin/bash
 set -euf -o pipefail
 
-FILE=${FILE:-"$(date +%F).tidal"}
-TIDAL_TEMPO_IP=${TIDAL_TEMPO_IP:-"127.0.0.1"}
-SESSION=${SESSION:-"tidal"}
-GHCI=${GHCI:-"ghci"}
+VIM=${VIM:-"vim"}
 TMUX=${TMUX:-"tmux"}
 
-# Get current directory (of script)
-# http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
-SOURCE="${BASH_SOURCE[0]}"
-while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
-  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-  SOURCE="$(readlink "$SOURCE")"
-  # if $SOURCE was a relative symlink, we need to resolve it relative to the
-  # path where the symlink file was located
-  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
-done
-DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+FILE=${FILE:-"$(date +%F).tidal"}
+SESSION=${SESSION:-"tidal"}
 
-BOOT_PATH=${BOOT_PATH:-"$DIR/../Tidal.ghci"}
+TIDAL_BOOT_PATH=${TIDAL_BOOT_PATH:-""}
+TIDAL_TEMPO_IP=${TIDAL_TEMPO_IP:-""}
+GHCI=${GHCI:-""}
+
+args=$@
 
 # Check if tmux session "tidal" is running, attach only
 # else, create new session, split windows and run processes
-
 $TMUX attach-session -t $SESSION || $TMUX \
   new-session -s $SESSION   \; \
   split-window -v -t $SESSION   \; \
-  send-keys -t 0 "vim $FILE" C-m   \; \
-  send-keys -t 1 "TIDAL_TEMPO_IP=$TIDAL_TEMPO_IP $GHCI -XOverloadedStrings -ghci-script $BOOT_PATH" C-m   \; \
+  send-keys -t 0 "$VIM $FILE" C-m   \; \
+  send-keys -t 1 "TIDAL_BOOT_PATH=$TIDAL_BOOT_PATH TIDAL_TEMPO_IP=$TIDAL_TEMPO_IP GHCI=$GHCI tidal $args" C-m   \; \
   select-pane -t 0
