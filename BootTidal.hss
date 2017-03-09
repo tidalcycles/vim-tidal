@@ -2,7 +2,10 @@
 
 :module Sound.Tidal.Context
 
-(cps, getNow) <- bpsUtils
+import qualified Sound.Tidal.Scales as Scales
+import qualified Sound.Tidal.Chords as Chords
+
+(cps, getNow) <- cpsUtils
 
 (d1,t1) <- superDirtSetters getNow
 (d2,t2) <- superDirtSetters getNow
@@ -14,6 +17,7 @@
 (d8,t8) <- superDirtSetters getNow
 (d9,t9) <- superDirtSetters getNow
 (d10,t10) <- superDirtSetters getNow
+
 (c1,ct1) <- dirtSetters getNow
 (c2,ct2) <- dirtSetters getNow
 (c3,ct3) <- dirtSetters getNow
