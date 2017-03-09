@@ -97,7 +97,7 @@ script.
     $ cd ~/.vim/bundle/vim-tidal
     $ sudo make install
 
-#### Development version of Tidal (0.x-dev)
+#### Development version of Tidal (x.y-dev)
 
 If you are using Tidal from a development branch or another branch different
 than *master*, you'll have to use the corresponding branch on vim-tidal.
