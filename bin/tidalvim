@@ -15,7 +15,7 @@ args=$@
 
 # Check if tmux session "tidal" is running, attach only
 # else, create new session, split windows and run processes
-$TMUX attach-session -t $SESSION || $TMUX \
+$TMUX -2 attach-session -t $SESSION || $TMUX -2 \
   new-session -s $SESSION   \; \
   split-window -v -t $SESSION   \; \
   send-keys -t 0 "$VIM $FILE" C-m   \; \
