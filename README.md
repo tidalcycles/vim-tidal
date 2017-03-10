@@ -151,9 +151,10 @@ For customizing the startup script for defining helper functions, see below.
 
 ## `tidalvim` and `tidal` ##
 
-This plugin comes with two Bash scripts: `tidal` and `tidalvim`.  `tidal` fires
-up GHCi and loads a bootstrap file for Tidal. You can even use it standalone
-(without Vim) by simply running `tidal` from your shell.
+This plugin comes bundled with two Bash scripts: `tidal` and `tidalvim`.
+
+`tidal` fires up GHCi and runs a bootstrap file that loads Tidal up. You can
+even use it standalone (without Vim) by simply running `tidal` from your shell.
 
 ```
 $ tidal
@@ -163,11 +164,13 @@ tidal> :t density 2 $ n "0 1"
 density 2 $ n "0 1" :: Pattern ParamMap
 ```
 
+`tidalvim` starts a Tmux session (named `tidal`), with Vim on the upper pane
+and Tidal on the lower pane.  This is just an example script.  You can copy and
+customize it as much as you want.  See `man tmux` if you want to know more
+about its options.
 
-
-There are no options yet, but most of the variables fallback to their
-respective environment variables, so they can be customized when running
-`tidalvim` or by exporting them before calling the script.  For example:
+Both scripts have some options that you can specify as environment variables.
+For example:
 
 ```
 TIDAL_TEMPO_IP=192.168.0.15 SESSION=whatever tidalvim
@@ -184,10 +187,10 @@ The following is a list of all variables that can be changed:
 
 * `SESSION`: Tmux session name (default: `tidal`)
 
+* `TIDAL_BOOT_PATH`: Tidal Bootstrap file, a .ghci file (default: `Tidal.ghci`)
+
 * `TIDAL_TEMPO_IP`: Tells Tidal to sync tempo with another Tidal instance on
   the specified IP (default: `127.0.0.1`, i.e. use local)
-
-* `TIDAL_BOOT_PATH`: Tidal Bootstrap file, a .ghci file (default: `Tidal.ghci`)
 
 * `VIM`: Vim command (default: `vim`)
 
@@ -196,11 +199,18 @@ The following is a list of all variables that can be changed:
 * `TMUX`: Tmux command (default: `tmux`)
 
 
-In case you have helper functions and other imports that you want to setup, you
-can edit the `Tidal.ghci`, but I recommend that you define another `.ghci` file
-which loads `Tidal.ghci`.
+### Customizing Tidal startup ###
 
-Here is an example:
+In case you have defined some helper functions, and/or you want to import other
+modules into Tidal, you can edit the `Tidal.ghci` found at the root of the
+repository.
+
+However doing this could eventually cause conflicts when trying to upgrade
+vim-tidal, so instead I recommend that you define a different `.ghci` file that
+first loads `Tidal.ghci` and includes all your custom definitions.
+
+Here is an example.  Suppose you define a `myStuff.ghci` file on your home
+directory like this:
 
 ```haskell
 --file: ~/myStuff.ghci
@@ -215,12 +225,17 @@ let foo = every 4 $ within (0.75, 1) (density 4)
 :}
 ```
 
-Then, run `tidal` or `tidalvim` with `TIDAL_BOOT_PATH` pointing to your new
-script file:
+Then, you would run `tidal` or `tidalvim` with `TIDAL_BOOT_PATH` pointing to
+your new script file:
 
 ```bash
 TIDAL_BOOT_PATH=~/myStuff.ghci tidalvim
 ```
+
+Remember that this a `.ghci` script, not a Haskell module. So multiline
+definitions need to be wrapped around `:{` and `:}`, as shown in the example
+above.
+
 
 ## Contributing
 
