@@ -100,9 +100,9 @@ script.
 ### Configure ###
 
 You probably need to set a local leader binding and configure tmux target pane.
-See the section Configuration below for more detailed instructions.
+See the "Configuration" section below for more detailed instructions.
 
-#### Development version of Tidal (x.y-dev)
+### Development version of Tidal (x.y-dev) ###
 
 If you are using Tidal from a development branch or another branch different
 than *master*, you'll have to use the corresponding branch on vim-tidal.
