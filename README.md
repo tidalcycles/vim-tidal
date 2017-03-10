@@ -146,6 +146,15 @@ About the target pane:
 * `"h:i.j"` means the tmux session where h is the session identifier (either
   session name or number), the ith window and the jth pane
 
+You can change the default target pane by defining `let g:tidal_default_config`
+on your `.vimrc`.. For example, suppose you want to run Tidal on a Tmux session
+named `omg`, and the GHCi interpreter is will be running on the window 1 and
+pane 0.  You would set:
+
+```vim
+let g:tidal_default_config = {"socket_name": "default", "target_pane": "omg:1.0"}
+```
+
 For customizing the startup script for defining helper functions, see below.
 
 
