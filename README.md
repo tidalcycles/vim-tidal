@@ -178,6 +178,14 @@ and Tidal on the lower pane.  This is just an example script.  You can copy and
 customize it as much as you want.  See `man tmux` if you want to know more
 about its options.
 
+For example, if you want to split horizontally instead of vertically, change
+the `-v` for `-h` option in the `split-window` line:
+
+```diff
+- split-window -v -t $SESSION   \; \
++ split-window -h -t $SESSION   \; \
+```
+
 Both scripts have some options that you can specify as environment variables.
 For example:
 
