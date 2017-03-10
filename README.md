@@ -6,7 +6,7 @@ Uses [tmux](http://tmux.sourceforge.net/) and it is based on
 [vim-slime](https://github.com/jpalardy/vim-slime) for communication with Tidal
 (ghci).
 
-![](http://i.imgur.com/3aXukEq.png)
+![](http://i.imgur.com/aTRDv2w.png)
 
 ## Usage ##
 
