@@ -18,9 +18,12 @@ This creates a tmux session with Vim and Tidal running on different panes.
 
 Then, using one of these key bindings you can send lines to Tidal:
 
-* `<localleader>ss`: Send current inner paragraph (equivalent to
+* `<localleader>ss`, `<c-e>`: Send current inner paragraph (equivalent to
   doing `vip`).
 * `<localleader>s`: Send current line or current visually selected block.
+
+`<c-e>` doesn't force you to be in Normal mode, so it is probably much faster
+to use than `<localleader>ss`.
 
 There are other bindings to control Tidal like:
 
@@ -28,7 +31,7 @@ There are other bindings to control Tidal like:
   from the current cursor position.
 * `<localleader>[N]`: Silences stream number `[N]` by sending
   `d[N] silence`.
-* `<localleader>h`: Silences all streams by sending `hush`.
+* `<localleader>h`, `<c-h>`: Silences all streams by sending `hush`.
 
 ### About these bindings
 
