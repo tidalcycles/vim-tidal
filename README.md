@@ -1,10 +1,10 @@
 # vim-tidal #
 
-A Vim plugin for [Tidal](https://github.com/yaxu/Tidal).
+A Vim plugin for [TidalCycles](http://tidal.lurk.org/).
 
-Uses [tmux](http://tmux.sourceforge.net/) and it is based on
-[vim-slime](https://github.com/jpalardy/vim-slime) for communication with Tidal
-(ghci).
+Uses [tmux](https://tmux.github.io/) and it is based on
+[vim-slime](https://github.com/jpalardy/vim-slime) to communicate with the
+Tidal interpreter (GHCi).
 
 ![](http://i.imgur.com/aTRDv2w.png)
 
@@ -16,7 +16,7 @@ You can start livecoding with Vim simply by running:
 
 This creates a tmux session with Vim and Tidal running on different panes.
 
-Then, use one of these key bindings to send lines to Tidal:
+Then, using one of these key bindings you can send lines to Tidal:
 
 * `<localleader>ss`: Send current inner paragraph (equivalent to
   doing `vip`).
@@ -46,7 +46,7 @@ let maplocalleader=","
 
 Reload your configuration (or restart Vim), and after typing `,ss` on a few
 lines of code, you should see those being copied onto the Tidal interpreter on
-the upper-right pane.
+the lower pane.
 
 
 ## Install ##
@@ -147,7 +147,7 @@ About the target pane:
   session name or number), the ith window and the jth pane
 
 You can change the default target pane by setting `let g:tidal_default_config`
-on your `.vimrc`.  For example, suppose you want to run Tidal on a Tmux session
+on your `.vimrc`.  For example, suppose you want to run Tidal on a tmux session
 named `omg`, and the GHCi interpreter will be running on the window 1 and pane
 0.  In that case you would need to set:
 
@@ -165,7 +165,7 @@ This plugin comes bundled with two Bash scripts: `tidal` and `tidalvim`.
 `tidal` fires up GHCi and runs a bootstrap file that loads Tidal up. You can
 even use it standalone (without Vim) by simply running `tidal` from your shell.
 
-```
+```bash
 $ tidal
 GHCi, version 7.10.3: http://www.haskell.org/ghc/  :? for help
 tidal> d1 $ sound "bd sn"
@@ -173,7 +173,7 @@ tidal> :t density 2 $ n "0 1"
 density 2 $ n "0 1" :: Pattern ParamMap
 ```
 
-`tidalvim` starts a Tmux session (named `tidal`), with Vim on the upper pane
+`tidalvim` starts a tmux session (named `tidal`), with Vim on the upper pane
 and Tidal on the lower pane.  This is just an example script.  You can copy and
 customize it as much as you want.  See `man tmux` if you want to know more
 about its options.
@@ -202,7 +202,7 @@ The following is a list of all variables that can be changed:
   `2017-03-09.tidal`).  The `.tidal` extension is important (you can run
   `:setfiletype haskell.tidal` in case you won't use a .tidal file here).
 
-* `SESSION`: Tmux session name (default: `tidal`)
+* `SESSION`: tmux session name (default: `tidal`)
 
 * `TIDAL_BOOT_PATH`: Tidal Bootstrap file, a .ghci file (default: `Tidal.ghci`)
 
@@ -213,7 +213,7 @@ The following is a list of all variables that can be changed:
 
 * `GHCI`: GHCi command (default: `ghci`)
 
-* `TMUX`: Tmux command (default: `tmux`)
+* `TMUX`: tmux command (default: `tmux`)
 
 
 ### Customizing Tidal startup ###
