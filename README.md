@@ -249,7 +249,7 @@ your new script file:
 TIDAL_BOOT_PATH=~/myStuff.ghci tidalvim
 ```
 
-Remember that this a `.ghci` script, not a Haskell module. So multiline
+Please note that this a `.ghci` script, not a Haskell module. So multiline
 definitions need to be wrapped around `:{` and `:}`, as shown in the example
 above.
 
