@@ -1,3 +1,10 @@
+0.3.0
+
+* Update bootstrap script for Tidal 0.9
+* `tidalvim` now only creates 2 panes for Vim and GHCi
+* Split `tidalvim` script in two scripts: `tidal` and `tidalvim`
+* Better instructions for customizing Tidal bootstrap script
+
 0.2.0
 
 * Remove vim-slime dependency
