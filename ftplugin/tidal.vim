@@ -108,6 +108,8 @@ if !exists("g:tidal_no_mappings") || !g:tidal_no_mappings
     nmap <buffer> <c-e> <Plug>TidalParagraphSend
   endif
 
+  imap <buffer> <c-e> <Esc><Plug>TidalParagraphSend<Esc>i
+
   nnoremap <buffer> <localleader>h :TidalHush<cr>
   nnoremap <buffer> <c-h> :TidalHush<cr>
   let i = 1
