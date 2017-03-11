@@ -152,7 +152,11 @@ endfunction
 
 function! s:TidalStoreCurPos()
   if g:tidal_preserve_curpos == 1
-    let s:cur = getpos('.')
+    if exists("*getcurpos")
+      let s:cur = getcurpos()
+    else
+      let s:cur = getpos('.')
+    endif
   endif
 endfunction
 
