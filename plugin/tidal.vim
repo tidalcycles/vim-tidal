@@ -80,6 +80,14 @@ function! s:TidalGetConfig()
   end
 endfunction
 
+function! s:TidalFlashVisualSelection()
+  " Redraw to show current visual selection, and sleep
+  redraw
+  execute "sleep " . g:tidal_flash_duration . " m"
+  " Then leave visual mode
+  silent exe "normal! vv"
+endfunction
+
 function! s:TidalSendOp(type, ...) abort
   call s:TidalGetConfig()
 
@@ -101,6 +109,12 @@ function! s:TidalSendOp(type, ...) abort
   call setreg('"', @", 'V')
   call s:TidalSend(@")
 
+  " Flash selection
+  if a:type == 'line'
+    silent exe "normal! '[V']"
+    call s:TidalFlashVisualSelection()
+  endif
+
   let &selection = sel_save
   call setreg('"', rv, rt)
 
@@ -112,7 +126,7 @@ function! s:TidalSendRange() range abort
 
   let rv = getreg('"')
   let rt = getregtype('"')
-  sil exe a:firstline . ',' . a:lastline . 'yank'
+  silent execute a:firstline . ',' . a:lastline . 'yank'
   call s:TidalSend(@")
   call setreg('"', rv, rt)
 endfunction
@@ -122,9 +136,18 @@ function! s:TidalSendLines(count) abort
 
   let rv = getreg('"')
   let rt = getregtype('"')
-  exe "norm! " . a:count . "yy"
+
+  silent execute "normal! " . a:count . "yy"
+
   call s:TidalSend(@")
   call setreg('"', rv, rt)
+
+  " Flash lines
+  silent execute "normal! V"
+  if a:count > 1
+    silent execute "normal! " . (a:count - 1) . "\<Down>"
+  endif
+  call s:TidalFlashVisualSelection()
 endfunction
 
 function! s:TidalStoreCurPos()
@@ -146,9 +169,6 @@ endfunction
 function! s:TidalSend(text)
   call s:TidalGetConfig()
 
-  " this used to return a string, but some receivers (coffee-script)
-  " will flush the rest of the buffer given a special sequence (ctrl-v)
-  " so we, possibly, send many strings -- but probably just one
   let pieces = s:_EscapeText(a:text)
   for piece in pieces
     call s:TidalDispatch('Send', b:tidal_config, piece)
@@ -221,4 +241,8 @@ endif
 
 if !exists("g:tidal_preserve_curpos")
   let g:tidal_preserve_curpos = 1
+end
+
+if !exists("g:tidal_flash_duration")
+  let g:tidal_flash_duration = 150
 end

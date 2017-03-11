@@ -158,6 +158,10 @@ named `omg`, and the GHCi interpreter will be running on the window 1 and pane
 let g:tidal_default_config = {"socket_name": "default", "target_pane": "omg:1.0"}
 ```
 
+When sending a paragraph or a single line, vim-tidal will "flash" the selection
+for some milliseconds.  By default duration is set to 150ms, but you can modify
+it by setting the `g:tidal_flash_duration` variable.
+
 For customizing the startup script for defining helper functions, see below.
 
 
