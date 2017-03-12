@@ -13,21 +13,23 @@ It was originally based on [vim-slime](https://github.com/jpalardy/vim-slime).
 
 1. Start livecoding with Vim by simply running:
 
-    $ tidalvim
+   ```bash
+   $ tidalvim
+   ```
 
-This creates a tmux session with Vim and Tidal running on different panes.
+   This creates a tmux session with Vim and Tidal running on different panes.
 
 2. Write something like this:
 
-```haskell
-d1 $ sound "bd sn"
-```
+   ```haskell
+   d1 $ sound "bd sn"
+   ```
 
 3. While being on that line, press `<c-e>` (Control + E) to evaluate it.
 
-You should see Vim flash that line for a second and a chunk of text appear on
-your Tidal interpreter.  If you already have SuperDirt or other synth running,
-you should hear a kick and a snare :)
+   You should see Vim flash that line for a second and a chunk of text appear on
+   your Tidal interpreter.  If you already have SuperDirt or other synth running,
+   you should hear a kick and a snare :)
 
 
 ## Install ##
