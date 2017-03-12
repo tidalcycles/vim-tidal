@@ -196,13 +196,15 @@ function! s:TidalHush()
 endfunction
 
 function! s:TidalSilence(stream)
-  execute 'TidalSend1 d' . a:stream . ' silence'
+  silent execute 'TidalSend1 d' . a:stream . ' silence'
 endfunction
 
 function! s:TidalPlay(stream)
   let res = search('^\s*d' . a:stream)
   if res > 0
-    execute "normal! vip:TidalSend\<cr>"
+    silent execute "normal! vip:TidalSend\<cr>"
+    silent execute "normal! vip"
+    call s:TidalFlashVisualSelection()
   else
     echo "d" . a:stream . " was not found"
   endif
