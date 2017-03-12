@@ -11,18 +11,23 @@ It was originally based on [vim-slime](https://github.com/jpalardy/vim-slime).
 
 ## Getting Started ##
 
-You can start livecoding with Vim simply by running:
+1. Start livecoding with Vim by simply running:
 
     $ tidalvim
 
 This creates a tmux session with Vim and Tidal running on different panes.
 
-Then, you can write something and press `<c-e>` (Control + E) to evaluate that
-piece of code.
+2. Write something like this:
 
-When you do this you should see Vim select it for a second and a chunk of text
-appear on your Tidal interpreter.  If you already have SuperDirt or other synth
-running, you should hear something now...
+```haskell
+d1 $ sound "bd sn"
+```
+
+3. While being on that line, press `<c-e>` (Control + E) to evaluate it.
+
+You should see Vim flash that line for a second and a chunk of text appear on
+your Tidal interpreter.  If you already have SuperDirt or other synth running,
+you should hear a kick and a snare :)
 
 
 ## Install ##
@@ -134,6 +139,13 @@ GHCi, version 7.10.3: http://www.haskell.org/ghc/  :? for help
 tidal> d1 $ sound "bd sn"
 tidal> :t density 2 $ n "0 1"
 density 2 $ n "0 1" :: Pattern ParamMap
+```
+
+So, in case you don't want to use `tidalvim`, just run the following on another
+terminal:
+
+```bash
+tmux new-session -s tidal tidal
 ```
 
 What `tidal` does is actually run `ghci` with the argument `-ghci-script
