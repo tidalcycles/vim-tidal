@@ -1,3 +1,11 @@
+0.3.1
+
+* Add <c-e> mapping for sending paragraphs, on Normal, Visual and Insert modes
+* Flash text selection when sending text
+* Force tmux to use 256 colors on tidalvim
+* Add <c-h> maping as an alternative to <localleader>h
+* Try to use getcurpos() if available when restoring cursor position
+
 0.3.0
 
 * Update bootstrap script for Tidal 0.9
