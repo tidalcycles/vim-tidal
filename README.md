@@ -229,7 +229,7 @@ let g:tidal_no_mappings = 1
 See section Mappings on [ftplugin/tidal.vim](ftplugin/tidal.vim) and copy the
 bindings you like to your `.vimrc` file and modify them.
 
-### tmux target ###
+### tmux ###
 
 You can configure tmux socket name and target pane by typing `<localleader>c`
 or `:TidalConfig`.  This will prompt you first for the socket name, then for
@@ -251,6 +251,13 @@ on the window 1 and pane 0.  In that case you would need to add this line:
 ```vim
 let g:tidal_default_config = {"socket_name": "default", "target_pane": "omg:1.0"}
 ```
+
+### ConEmu ###
+
+On Windows, set `g:tidal_target` to `conemu` so that the plugin uses ConEmu
+instead of tmux to send lines.
+
+*To do...*
 
 ### Miscelaneous ###
 
