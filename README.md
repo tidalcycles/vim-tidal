@@ -1,12 +1,11 @@
 # vim-tidal #
 
-A Vim plugin for [TidalCycles](http://tidal.lurk.org/), a language for live
-coding musical patterns, written in Haskell.
+A Vim plugin for [TidalCycles](http://tidal.lurk.org/), the language for live
+coding musical patterns written in Haskell.
 
 This plugin uses [tmux](https://tmux.github.io/), a known and loved terminal
-multiplexer, for communicating with between Vim and the Tidal interpreter
-(GHCi).  It was originally based on
-[vim-slime](https://github.com/jpalardy/vim-slime).
+multiplexer, for communicating with between Vim and the Tidal interpreter.
+It was originally based on [vim-slime](https://github.com/jpalardy/vim-slime).
 
 ![](http://i.imgur.com/frOLFFI.gif)
 
@@ -19,15 +18,17 @@ You can start livecoding with Vim simply by running:
 This creates a tmux session with Vim and Tidal running on different panes.
 
 Then, you can write something and press `<c-e>` (Control + E) to evaluate that
-piece of code.  When you do this you should see Vim select it for a second and
-that same chunk of text appear on your Tidal interpreter.  If you already have
-SuperDirt or other synth running, you should hear some sounds now.
+piece of code.
+
+When you do this you should see Vim select it for a second and a chunk of text
+appear on your Tidal interpreter.  If you already have SuperDirt or other synth
+running, you should hear something now...
 
 
 ## Install ##
 
-Make sure you have TidalCycles installed, with SuperDirt running. See Tidal's
-[Getting Started](https://tidalcycles.org/getting_started.html) page for more
+Make sure you have TidalCycles installed, with SuperDirt running. See [Getting
+Started with Tidal](https://tidalcycles.org/getting_started.html) page for more
 information.
 
 ### Install tmux ###
@@ -106,66 +107,85 @@ $ git pull
 $ git checkout 0.9-dev origin/0.9-dev
 ```
 
-## Configure ##
-
-By default, there are two normal keybindings and one for visual blocks using
-your `<localleader>` key.  If you don't have one defined, set it on your
-`.vimrc` script with `let maplocalleader=","`, for example.
-
-You can configure tmux socket name and target pane by typing `<localleader>c`
-or `:TidalConfig`.
-
-About the target pane:
-
-* `":"` means current window, current pane (a reasonable default)
-* `":i"` means the ith window, current pane
-* `":i.j"` means the ith window, jth pane
-* `"h:i.j"` means the tmux session where h is the session identifier (either
-  session name or number), the ith window and the jth pane
-
-You can change the default target pane by setting `let g:tidal_default_config`
-on your `.vimrc`.  For example, suppose you want to run Tidal on a tmux session
-named `omg`, and the GHCi interpreter will be running on the window 1 and pane
-0.  In that case you would need to set:
-
-```vim
-let g:tidal_default_config = {"socket_name": "default", "target_pane": "omg:1.0"}
-```
-
-When sending a paragraph or a single line, vim-tidal will "flash" the selection
-for some milliseconds.  By default duration is set to 150ms, but you can modify
-it by setting the `g:tidal_flash_duration` variable.
-
-For customizing the startup script for defining helper functions, see below.
-
 
 ## Usage
 
+This plugin comes bundled with two Bash scripts: `tidalvim` and `tidal`.
+
+### `tidalvim`
+
+`tidalvim` starts a tmux session with the screen horizontally splitted, having
+Vim on the upper pane and the Tidal interpreter on the lower pane.  This is the
+simplest way to start using Tidal with Vim.
+
+You don't have to use `tidalvim` necessarily. If you have a more complex setup
+or just want to use Vim outside of tmux, you can use `tidal`.  See below.
+
+### `tidal`
+
+`tidal` fires up GHCi (the Glasgow Haskell interpreter) and runs a bootstrap
+file that loads Tidal up. `tidalvim` uses this script to start the Tidal
+interpreter on the lower pane.  You can even use it standalone (without Vim) by
+simply running `tidal` from your shell.
+
+```haskell
+$ tidal
+GHCi, version 7.10.3: http://www.haskell.org/ghc/  :? for help
+tidal> d1 $ sound "bd sn"
+tidal> :t density 2 $ n "0 1"
+density 2 $ n "0 1" :: Pattern ParamMap
+```
+
+What `tidal` does is actually run `ghci` with the argument `-ghci-script
+Tidal.ghci`.  [Tidal.ghci](Tidal.ghci) is found at the root of the repository,
+and is responsible for bootstraping Tidal.  See Configure section for more on
+how to customize Tidal bootstraping process.  Any extra arguments when running
+`tidal` will be delegated to `ghci`.
+
+### Commands
+
+These are some of the commands that can be run from Vim command line:
+
+* `:<range>TidalSend`: Send a `[range]` of lines. If no range is provided the
+  current line is sent.
+
+* `:TidalSend1 {text}`: Send a single line of text specified on the command
+  line.
+
+* `:TidalConfig`: Configure tmux socket name and target pane
+
+* `:TidalSilence [num]`: Silence stream number `[num]` by sending `d[num]
+  silence`.
+
+* `:TidalPlay [num]`: Send first ocurrence of stream number `[num`] from the
+  current cursor position.
+
+* `:TidalHush`: Silences all streams by sending `hush`.
+
+### Default bindings
+
 Using one of these key bindings you can send lines to Tidal:
 
-* `<c-e>` (Control+E), `<localleader>ss`, : Send current inner paragraph.
+* `<c-e>` (Control+E), `<localleader>ss`: Send current inner paragraph.
 * `<localleader>s`: Send current line or current visually selected block.
 
-`<c-e>` can be called either on Normal, Visual or Insert mode, so it is
-probably much easier to type than `<localleader>ss`, which is only available on
-Normal mode.
+`<c-e>` can be called on either Normal, Visual, Select or Insert mode, so it is
+probably easier to type than `<localleader>ss` or `<localleader>s`.
 
 There are other bindings to control Tidal like:
 
-* `<localleader>s[N]`: Send first ocurrence of stream number `[N]`
-  from the current cursor position.
-* `<localleader>[N]`: Silences stream number `[N]` by sending
-  `d[N] silence`.
-* `<localleader>h`, `<c-h>`: Silences all streams by sending `hush`.
+* `<localleader>s[num]`: Call `:TidalPlay [num]`
+* `<localleader>[num]`: Call `:TidalSilence [num]`
+* `<localleader>h`, `<c-h>`: Call `:TidalHush`
 
-### About these bindings
+#### About `<localleader>`
 
 The `<leader>` key is a special key used to perform commands with a sequence of
 keys.  The `<localleader>` key behaves as the `<leader>` key, but is *local* to
 a buffer.  In particular, the above bindings only work in buffers with the
 "tidal" file type set, e.g. files whose file type is `.tidal`
 
-By default, there is no `<localheader>` set.  To define one, e.g. for use with
+By default, there is no `<localleader>` set.  To define one, e.g. for use with
 a comma (`,`), write this on your `.vimrc` file:
 
 ```vim
@@ -177,25 +197,60 @@ lines of code, you should see those being copied onto the Tidal interpreter on
 the lower pane.
 
 
-## `tidalvim` and `tidal` ##
+## Configure ##
 
-This plugin comes bundled with two Bash scripts: `tidal` and `tidalvim`.
+### Default bindings ###
 
-`tidal` fires up GHCi and runs a bootstrap file that loads Tidal up. You can
-even use it standalone (without Vim) by simply running `tidal` from your shell.
+By default, there are two normal keybindings and one for visual blocks using
+your `<localleader>` key.  If you don't have one defined, set it on your
+`.vimrc` script with `let maplocalleader=","`, for example.
 
-```bash
-$ tidal
-GHCi, version 7.10.3: http://www.haskell.org/ghc/  :? for help
-tidal> d1 $ sound "bd sn"
-tidal> :t density 2 $ n "0 1"
-density 2 $ n "0 1" :: Pattern ParamMap
+If you don't like some of the bindings or want to change them, add this line to
+disable them:
+
+```vim
+let g:tidal_no_mappings = 1
 ```
 
-`tidalvim` starts a tmux session (named `tidal`), with Vim on the upper pane
-and Tidal on the lower pane.  This is just an example script.  You can copy and
-customize it as much as you want.  See `man tmux` if you want to know more
-about its options.
+See section Mappings on [ftplugin/tidal.vim](ftplugin/tidal.vim) and copy the
+bindings you like to your `.vimrc` file and modify them.
+
+### tmux target ###
+
+You can configure tmux socket name and target pane by typing `<localleader>c`
+or `:TidalConfig`.  This will prompt you first for the socket name, then for
+the target pane.
+
+About the target pane:
+
+* `":"` means current window, current pane (a reasonable default)
+* `":i"` means the ith window, current pane
+* `":i.j"` means the ith window, jth pane
+* `"h:i.j"` means the tmux session where h is the session identifier (either
+  session name or number), the ith window and the jth pane
+
+When you exit Vim you will lose that configuration. To make this permanent, set
+`g:tidal_default_config` on your `.vimrc`.  For example, suppose you want to run
+Tidal on a tmux session named `omg`, and the GHCi interpreter will be running
+on the window 1 and pane 0.  In that case you would need to add this line:
+
+```vim
+let g:tidal_default_config = {"socket_name": "default", "target_pane": "omg:1.0"}
+```
+
+### Miscelaneous ###
+
+When sending a paragraph or a single line, vim-tidal will "flash" the selection
+for some milliseconds.  By default duration is set to 150ms, but you can modify
+it by setting the `g:tidal_flash_duration` variable.
+
+For customizing the startup script for defining helper functions, see below.
+
+
+## `tidalvim` and `tidal` ##
+
+`tidalvim`  is just an example script.  You can copy and customize it as much
+as you want.  See `man tmux` if you want to know more about its options.
 
 For example, if you want to split horizontally instead of vertically, change
 the `-v` for `-h` option in the `split-window` line:
@@ -233,7 +288,6 @@ The following is a list of all variables that can be changed:
 * `GHCI`: GHCi command (default: `ghci`)
 
 * `TMUX`: tmux command (default: `tmux`)
-
 
 ### Customizing Tidal startup ###
 
@@ -273,14 +327,43 @@ definitions need to be wrapped around `:{` and `:}`, as shown in the example
 above.
 
 
+## Troubleshooting
+
+Here is a list of common problems.
+
+> I press `<c-e>` but it moves the screen down by one line, and nothing else happens
+
+Usually `<c-e>` is used to move the screen forward by one line, but vim-tidal remaps
+this to sending current paragraph. If this is happening you either:
+
+1. Opened a file without `.tidal` extension, or changed file type accidentally
+   (reopen Vim or set filetype with `:set ft=haskell.tidal`).
+2. Have `g:tidal_no_mappings` setting on your `.vimrc`. This disables all
+   mappings. Remove or rebind `<c-e>`.
+
+> I press `<c-e>` and nothing else happens
+
+This means that vim-tidal is sending text to tmux, but to the wrong
+session/window/pane.  Check that you have configure the socket name and target
+pane correctly.  See the Configure section above for more information.
+
+If you have any question or something does not work as expected, there are many
+channels you can go to:
+
+* [Ask TidalCycles](http://ask.tidalcycles.org/questions/) Q&A
+* Official [Tidal forum](http://lurk.org/groups/tidal/)
+* [TOPLAP #tidal channel](http://toplap.org/toplap-on-slack/)
+* [GitHub issues](https://github.com/munshkr/vim-tidal/issues/new)
+
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at
-<https://github.com/munshkr/vim-tidal>. This project is intended to be a safe,
+<https://github.com/munshkr/vim-tidal>.  This project is intended to be a safe,
 welcoming space for collaboration, and contributors are expected to adhere to
 the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 
 ## License
 
-Refer to the LICENSE file
+Refer to the [LICENSE](LICENSE) file
