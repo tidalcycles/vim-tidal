@@ -1,14 +1,16 @@
 # vim-tidal #
 
-A Vim plugin for [TidalCycles](http://tidal.lurk.org/).
+A Vim plugin for [TidalCycles](http://tidal.lurk.org/), a language for live
+coding musical patterns, written in Haskell.
 
-Uses [tmux](https://tmux.github.io/) and it is based on
-[vim-slime](https://github.com/jpalardy/vim-slime) to communicate with the
-Tidal interpreter (GHCi).
+This plugin uses [tmux](https://tmux.github.io/), a known and loved terminal
+multiplexer, for communicating with between Vim and the Tidal interpreter
+(GHCi).  It was originally based on
+[vim-slime](https://github.com/jpalardy/vim-slime).
 
 ![](http://i.imgur.com/frOLFFI.gif)
 
-## Usage ##
+## Getting Started ##
 
 You can start livecoding with Vim simply by running:
 
@@ -16,47 +18,19 @@ You can start livecoding with Vim simply by running:
 
 This creates a tmux session with Vim and Tidal running on different panes.
 
-Then, using one of these key bindings you can send lines to Tidal:
-
-* `<localleader>ss`, `<c-e>`: Send current inner paragraph (equivalent to
-  doing `vip`).
-* `<localleader>s`: Send current line or current visually selected block.
-
-`<c-e>` doesn't force you to be in Normal mode, so it is probably much faster
-to use than `<localleader>ss`.
-
-There are other bindings to control Tidal like:
-
-* `<localleader>s[N]`: Send first ocurrence of stream number `[N]`
-  from the current cursor position.
-* `<localleader>[N]`: Silences stream number `[N]` by sending
-  `d[N] silence`.
-* `<localleader>h`, `<c-h>`: Silences all streams by sending `hush`.
-
-### About these bindings
-
-The `<leader>` key is a special key used to perform commands with a sequence of
-keys.  The `<localleader>` key behaves as the `<leader>` key, but is *local* to
-a buffer.  In particular, the above bindings only work in buffers with the
-"tidal" file type set, e.g. files whose file type is `.tidal`
-
-By default, there is no `<localheader>` set.  To define one, e.g. for use with
-a comma (`,`), write this on your `.vimrc` file:
-
-```vim
-let maplocalleader=","
-```
-
-Reload your configuration (or restart Vim), and after typing `,ss` on a few
-lines of code, you should see those being copied onto the Tidal interpreter on
-the lower pane.
+Then, you can write something and press `<c-e>` (Control + E) to evaluate that
+piece of code.  When you do this you should see Vim select it for a second and
+that same chunk of text appear on your Tidal interpreter.  If you already have
+SuperDirt or other synth running, you should hear some sounds now.
 
 
 ## Install ##
 
-### Install tmux ###
+Make sure you have TidalCycles installed, with SuperDirt running. See Tidal's
+[Getting Started](https://tidalcycles.org/getting_started.html) page for more
+information.
 
-tmux is used to communicate between Vim and Tidal.
+### Install tmux ###
 
 #### Ubuntu/Debian ####
 
@@ -74,16 +48,19 @@ There seems to be [a Cygwin package for
 tmux](https://cygwin.com/cgi-bin2/package-cat.cgi?file=x86%2Ftmux%2Ftmux-1.9a-1&grep=tmux),
 but I haven't tested this plugin on Windows anyway, so you are on your own here.
 
-If you happen to make it work, let me know so I can update this text!
+If you happen to make it work, let me know so I can update this section!
 
 ### Install plugin ###
 
-A Vim plugins manager like [Vundle](https://github.com/gmarik/Vundle.vim) or
+You can download the latest release
+[here](https://github.com/munshkr/vim-tidal/releases) and extract the contents
+on your Vim directory (usually `~/.vim/`).  However, using a Vim plugins
+manager like [Vundle](https://github.com/gmarik/Vundle.vim) or
 [Pathogen](https://github.com/tpope/vim-pathogen/) is *highly recommended*.
-Install one of those if you don't have one.
-Check those links for instructions.
+Install one of those if you don't have one.  Check those links for
+instructions.
 
-For example, using Vundle:
+For example, with Vundle you would:
 
   * Edit your `.vimrc` file and add these lines:
 
@@ -94,16 +71,13 @@ Plugin 'munshkr/vim-tidal'
   * Restart Vim and execute `:PluginInstall` to automatically download and
     install the plugins.
 
-Finally, go to the plugin repository and run `make` to install the `tidalvim`
-script.
+Finally, go to the plugin repository and run `make install`:
 
     $ cd ~/.vim/bundle/vim-tidal
     $ sudo make install
 
-### Configure ###
-
-You probably need to set a local leader binding and configure tmux target pane.
-See the "Configuration" section below for more detailed instructions.
+This creates symlinks on `/usr/local/bin` for `tidal` and `tidalvim` scripts.
+You can remove them later if you want with `make uninstall`.
 
 ### Development version of Tidal (x.y-dev) ###
 
@@ -132,14 +106,14 @@ $ git pull
 $ git checkout 0.9-dev origin/0.9-dev
 ```
 
-
-## Configuration ##
+## Configure ##
 
 By default, there are two normal keybindings and one for visual blocks using
 your `<localleader>` key.  If you don't have one defined, set it on your
 `.vimrc` script with `let maplocalleader=","`, for example.
 
-You can configure tmux socket name and target pane by typing `<localleader>c`.
+You can configure tmux socket name and target pane by typing `<localleader>c`
+or `:TidalConfig`.
 
 About the target pane:
 
@@ -163,6 +137,44 @@ for some milliseconds.  By default duration is set to 150ms, but you can modify
 it by setting the `g:tidal_flash_duration` variable.
 
 For customizing the startup script for defining helper functions, see below.
+
+
+## Usage
+
+Using one of these key bindings you can send lines to Tidal:
+
+* `<c-e>` (Control+E), `<localleader>ss`, : Send current inner paragraph.
+* `<localleader>s`: Send current line or current visually selected block.
+
+`<c-e>` can be called either on Normal, Visual or Insert mode, so it is
+probably much easier to type than `<localleader>ss`, which is only available on
+Normal mode.
+
+There are other bindings to control Tidal like:
+
+* `<localleader>s[N]`: Send first ocurrence of stream number `[N]`
+  from the current cursor position.
+* `<localleader>[N]`: Silences stream number `[N]` by sending
+  `d[N] silence`.
+* `<localleader>h`, `<c-h>`: Silences all streams by sending `hush`.
+
+### About these bindings
+
+The `<leader>` key is a special key used to perform commands with a sequence of
+keys.  The `<localleader>` key behaves as the `<leader>` key, but is *local* to
+a buffer.  In particular, the above bindings only work in buffers with the
+"tidal" file type set, e.g. files whose file type is `.tidal`
+
+By default, there is no `<localheader>` set.  To define one, e.g. for use with
+a comma (`,`), write this on your `.vimrc` file:
+
+```vim
+let maplocalleader=","
+```
+
+Reload your configuration (or restart Vim), and after typing `,ss` on a few
+lines of code, you should see those being copied onto the Tidal interpreter on
+the lower pane.
 
 
 ## `tidalvim` and `tidal` ##
@@ -264,7 +276,7 @@ above.
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at
-https://github.com/munshkr/vim-tidal. This project is intended to be a safe,
+<https://github.com/munshkr/vim-tidal>. This project is intended to be a safe,
 welcoming space for collaboration, and contributors are expected to adhere to
 the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
