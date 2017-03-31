@@ -1,0 +1,6 @@
+#!/bin/sh
+
+samplepath=$1
+outputpath=$2
+
+ls "$samplepath" | sed 's/README.md//; s/Dirt-Samples.quark//;' | sed '/^\s*$/d' > "$outputpath"

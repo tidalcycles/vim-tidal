@@ -176,6 +176,8 @@ These are some of the commands that can be run from Vim command line:
 
 * `:TidalHush`: Silences all streams by sending `hush`.
 
+* `:TidalGenerateCompletions {path}`: Generate dictionary for Dirt-Samples completion (path is optional)
+
 ### Default bindings
 
 Using one of these key bindings you can send lines to Tidal:

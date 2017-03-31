@@ -166,6 +166,8 @@ function! s:TidalRestoreCurPos()
   endif
 endfunction
 
+let s:parent_path = fnamemodify(expand("<sfile>"), ":p:h:s?/plugin??")
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Public interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -210,6 +212,26 @@ function! s:TidalPlay(stream)
   endif
 endfunction
 
+function! s:TidalGenerateCompletions(path)
+  let l:exe = s:parent_path . "/bin/generate-completions"
+  let l:output_path = s:parent_path . "/.dirt-samples"
+
+  if !empty(a:path)
+    let l:sample_path = a:path
+  else
+    if has('macunix')
+      let l:sample_path = "~/Library/Application Support/SuperCollider/downloaded-quarks/Dirt-Samples"
+    elseif has('unix')
+      let l:sample_path = "~/.local/share/SuperCollider/downloaded-quarks/Dirt-Samples"
+    endif
+  endif
+  " generate completion file
+  silent execute '!' . l:exe shellescape(expand(l:sample_path)) shellescape(expand(l:output_path))
+  echo "Generated dictionary of dirt-samples"
+  " setup completion
+  let &l:dictionary .= ',' . l:output_path
+endfunction
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Setup key bindings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -221,6 +243,7 @@ command -nargs=+ TidalSend1 call s:TidalSend(<q-args> . "\r")
 command! -nargs=0 TidalHush call s:TidalHush()
 command! -nargs=1 TidalSilence call s:TidalSilence(<args>)
 command! -nargs=1 TidalPlay call s:TidalPlay(<args>)
+command! -nargs=? TidalGenerateCompletions call s:TidalGenerateCompletions(<q-args>)
 
 noremap <SID>Operator :<c-u>call <SID>TidalStoreCurPos()<cr>:set opfunc=<SID>TidalSendOp<cr>g@
 
@@ -252,3 +275,7 @@ end
 if !exists("g:tidal_flash_duration")
   let g:tidal_flash_duration = 150
 end
+
+if filereadable(s:parent_path . "/.dirt-samples")
+  let &l:dictionary .= ',' . s:parent_path . "/.dirt-samples"
+endif
