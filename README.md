@@ -352,16 +352,19 @@ Here is a list of common problems.
 Usually `<c-e>` is used to move the screen forward by one line, but vim-tidal remaps
 this to sending current paragraph. If this is happening you either:
 
-1. Opened a file without `.tidal` extension, or changed file type accidentally
-   (reopen Vim or set filetype with `:set ft=haskell.tidal`).
+1. Opened a file without `.tidal` extension, or changed file type accidentally.
+   *Solution*: Reopen Vim or set filetype for current buffer with `:set
+   ft=haskell.tidal`.
 2. Have `g:tidal_no_mappings` setting on your `.vimrc`. This disables all
-   mappings. Remove or rebind `<c-e>`.
+   mappings.
+   *Solution*: Remove `<c-e>` binding, or rebind to something else.
 
 > I press `<c-e>` and nothing else happens
 
 This means that vim-tidal is sending text to tmux, but to the wrong
-session/window/pane.  Check that you have configure the socket name and target
-pane correctly.  See the Configure section above for more information.
+session/window/pane.
+*Solution*: Check that you have configure the socket name and target pane
+correctly.  See the Configure section above for more information.
 
 If you have any question or something does not work as expected, there are many
 channels you can go to:
