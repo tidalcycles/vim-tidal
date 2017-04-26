@@ -5,7 +5,7 @@
 import qualified Sound.Tidal.Scales as Scales
 import qualified Sound.Tidal.Chords as Chords
 
-(cps, getNow) <- cpsUtils
+(cps, nudger, getNow) <- cpsUtils'
 
 (d1,t1) <- superDirtSetters getNow
 (d2,t2) <- superDirtSetters getNow
