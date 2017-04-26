@@ -6,9 +6,9 @@ let s:not_prefixable_keywords = [ "import", "data", "instance", "class", "{-#", 
 let s:cycle_position_defs = [
   \"now' <- getNow",
   \"let now = nextSam now'",
-  \"let retrig = (now ~>)",
-  \"let fadeOut n = spread' (degradeBy) (retrig $ slow n $ envL)",
-  \"let fadeIn n = spread' (degradeBy) (retrig $ slow n $ (1-) <$> envL)"
+  \"let retrig = (now `rotR`)",
+  \"let fadeOut n = spread' (_degradeBy) (retrig $ slow n $ envL)",
+  \"let fadeIn n = spread' (_degradeBy) (retrig $ slow n $ (1-) <$> envL)"
 \]
 
 " guess correct number of spaces to indent
