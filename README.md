@@ -369,7 +369,7 @@ correctly.  See the Configure section above for more information.
 If you have any question or something does not work as expected, there are many
 channels you can go to:
 
-* [Chat](https://talk.lurk.org/) Check out the #tidal and #vim channels
+* [Chat](https://talk.lurk.org/): Reach out at the `#tidal` and `#vim` channels
 * [GitHub issues](https://github.com/munshkr/vim-tidal/issues/new)
 * [Official Tidal forum](https://we.lurk.org/postorius/lists/tidal.we.lurk.org/)
 
