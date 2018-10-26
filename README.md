@@ -61,7 +61,7 @@ If you happen to make it work, let me know so I can update this section!
 ### Install plugin ###
 
 You can download the latest release
-[here](https://github.com/munshkr/vim-tidal/releases) and extract the contents
+[here](https://github.com/tidalcycles/vim-tidal/releases) and extract the contents
 on your Vim directory (usually `~/.vim/`).  However, using a Vim plugins
 manager like [Vundle](https://github.com/gmarik/Vundle.vim) or
 [Pathogen](https://github.com/tpope/vim-pathogen/) is *highly recommended*.
@@ -73,7 +73,7 @@ For example, with Vundle you would:
   * Edit your `.vimrc` file and add these lines:
 
 ```vim
-Plugin 'munshkr/vim-tidal'
+Plugin 'tidalcycles/vim-tidal'
 ```
 
   * Restart Vim and execute `:PluginInstall` to automatically download and
@@ -101,7 +101,7 @@ pull`, etc.)
 To sum up, pin the plugin with this:
 
 ```vim
-Plugin 'munshkr/vim-tidal', {'pinned': 1}
+Plugin 'tidalcycles/vim-tidal', {'pinned': 1}
 ```
 
 Then go to where your Vundle plugins reside (usually
@@ -370,16 +370,17 @@ If you have any question or something does not work as expected, there are many
 channels you can go to:
 
 * [Chat](https://talk.lurk.org/): Reach out at the `#tidal` and `#vim` channels
-* [GitHub issues](https://github.com/munshkr/vim-tidal/issues/new)
+* [GitHub issues](https://github.com/tidalcycles/vim-tidal/issues/new)
 * [Official Tidal forum](https://we.lurk.org/postorius/lists/tidal.we.lurk.org/)
 
 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at
-<https://github.com/munshkr/vim-tidal>.  This project is intended to be a safe,
-welcoming space for collaboration, and contributors are expected to adhere to
-the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+<https://github.com/tidalcycles/vim-tidal>.  This project is intended to be a
+safe, welcoming space for collaboration, and contributors are expected to
+adhere to the [Contributor Covenant](http://contributor-covenant.org) code of
+conduct.
 
 
 ## License
