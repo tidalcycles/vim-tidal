@@ -3,13 +3,6 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let s:not_prefixable_keywords = [ "import", "data", "instance", "class", "{-#", "type", "case", "do", "let", "default", "foreign", "--"]
-let s:cycle_position_defs = [
-  \"now' <- getNow",
-  \"let now = nextSam now'",
-  \"let retrig = (now `rotR`)",
-  \"let fadeOut n = spread' (_degradeBy) (retrig $ slow n $ envL)",
-  \"let fadeIn n = spread' (_degradeBy) (retrig $ slow n $ (1-) <$> envL)"
-\]
 
 " guess correct number of spaces to indent
 " (tabs are not allowed)
@@ -61,10 +54,6 @@ function! Wrap_if_multi(lines)
     endif
 endfunction
 
-function! Add_Cycle_Pos_Defs(lines)
-    return s:cycle_position_defs + a:lines
-endfunction
-
 " change string into array of lines
 function! Lines(text)
     return split(a:text, "\n")
@@ -81,7 +70,6 @@ function! _EscapeText_haskell_tidal(text)
     let l:lines = Lines(Tab_to_spaces(l:text))
     let l:lines = Remove_line_comments(l:lines)
     let l:lines = Wrap_if_multi(l:lines)
-    let l:lines = Add_Cycle_Pos_Defs(l:lines)
     return Unlines(l:lines)
 endfunction
 
