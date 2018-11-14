@@ -88,7 +88,7 @@ You can remove them later if you want with `make uninstall`.
 
 ### Tidal 1.0.0-pre ###
 
-If you want to try out the new Tidal 1.0 , you'll have to use the `1.0-pre`
+If you want to try out the new Tidal 1.0 , you'll have to use the `1.0.0-pre`
 branch on vim-tidal.
 
 First change your Plug line on your `.vimrc` to:
