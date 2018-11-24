@@ -1,1 +1,1 @@
-autocmd BufRead,BufNewFile *.tidal setfiletype haskell.tidal
+autocmd BufRead,BufNewFile *.tidal setfiletype tidal
