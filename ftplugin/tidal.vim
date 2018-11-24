@@ -65,7 +65,7 @@ function! Unlines(lines)
 endfunction
 
 " vim slime handler
-function! _EscapeText_haskell_tidal(text)
+function! _EscapeText_tidal(text)
     let l:text  = Remove_block_comments(a:text)
     let l:lines = Lines(Tab_to_spaces(l:text))
     let l:lines = Remove_line_comments(l:lines)
