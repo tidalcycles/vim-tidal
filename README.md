@@ -339,7 +339,7 @@ this to sending current paragraph. If this is happening you either:
 
 1. Opened a file without `.tidal` extension, or changed file type accidentally.
    *Solution*: Reopen Vim or set filetype for current buffer with `:set
-   ft=haskell.tidal`.
+   ft=tidal`.
 2. Have `g:tidal_no_mappings` setting on your `.vimrc`. This disables all
    mappings.
    *Solution*: Remove `<c-e>` binding, or rebind to something else.
