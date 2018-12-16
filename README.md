@@ -86,15 +86,16 @@ Finally, go to the plugin repository and run `make install`:
 This creates symlinks on `/usr/local/bin` for `tidal` and `tidalvim` scripts.
 You can remove them later if you want with `make uninstall`.
 
-### Tidal 1.0.0-pre ###
+### Older Tidal versions (pre 1.0) ###
 
-If you want to try out the new Tidal 1.0 , you'll have to use the `1.0.0-pre`
-branch on vim-tidal.
+Tidal 1.0 introduces some breaking changes, so if haven't upgraded yet, you can
+still use this plugin with an older version. Just point your Plug entry to use
+the `tidal-0.9` branch.
 
 First change your Plug line on your `.vimrc` to:
 
 ```vim
-Plug 'tidalcycles/vim-tidal', {'branch': '1.0.0-pre'}
+Plug 'tidalcycles/vim-tidal', {'branch': 'tidal-0.9'}
 ```
 
 Then on Vim run `:PlugInstall` to update your plugin. 
