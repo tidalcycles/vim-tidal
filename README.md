@@ -1,5 +1,8 @@
 # vim-tidal #
 
+**NOTE: This branch is for using TidalCycles 0.9 or older versions. For Tidal
+1.0, check the master branch.**
+
 A Vim plugin for [TidalCycles](http://tidal.lurk.org/), the language for live
 coding musical patterns written in Haskell.
 
@@ -85,19 +88,6 @@ Finally, go to the plugin repository and run `make install`:
 
 This creates symlinks on `/usr/local/bin` for `tidal` and `tidalvim` scripts.
 You can remove them later if you want with `make uninstall`.
-
-### Tidal 1.0.0-pre ###
-
-If you want to try out the new Tidal 1.0 , you'll have to use the `1.0.0-pre`
-branch on vim-tidal.
-
-First change your Plug line on your `.vimrc` to:
-
-```vim
-Plug 'tidalcycles/vim-tidal', {'branch': '1.0.0-pre'}
-```
-
-Then on Vim run `:PlugInstall` to update your plugin. 
 
 
 ## Usage
