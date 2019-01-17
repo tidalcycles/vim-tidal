@@ -2,6 +2,7 @@ import Sound.Tidal.Context
 
 tidal <- startTidal superdirtTarget defaultConfig
 
+:{
 let p = streamReplace tidal
     hush = streamHush tidal
     list = streamList tidal
@@ -44,5 +45,6 @@ let p = streamReplace tidal
     d14 = p "14"
     d15 = p "15"
     d16 = p "16"
+:}
 
 :set prompt "tidal> "
