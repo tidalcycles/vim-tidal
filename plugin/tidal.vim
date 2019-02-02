@@ -1,7 +1,40 @@
 if exists("g:loaded_tidal") || &cp || v:version < 700
   finish
 endif
+
 let g:loaded_tidal = 1
+let s:parent_path = fnamemodify(expand("<sfile>"), ":p:h:s?/plugin??")
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Default config
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+if !exists("g:tidal_target")
+  if has('nvim') || has('terminal')
+    let g:tidal_target = "terminal"
+  else
+    let g:tidal_target = "tmux"
+endif
+
+if !exists("g:tidal_paste_file")
+  let g:tidal_paste_file = tempname()
+endif
+
+if !exists("g:tidal_default_config")
+  let g:tidal_default_config = { "socket_name": "default", "target_pane": ":0.1" }
+endif
+
+if !exists("g:tidal_preserve_curpos")
+  let g:tidal_preserve_curpos = 1
+end
+
+if !exists("g:tidal_flash_duration")
+  let g:tidal_flash_duration = 150
+end
+
+if filereadable(s:parent_path . "/.dirt-samples")
+  let &l:dictionary .= ',' . s:parent_path . "/.dirt-samples"
+endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Tmux
@@ -28,7 +61,6 @@ function! s:TmuxConfig() abort
   if !exists("b:tidal_config")
     let b:tidal_config = {"socket_name": "default", "target_pane": ":"}
   end
-
   let b:tidal_config["socket_name"] = input("tmux socket name: ", b:tidal_config["socket_name"])
   let b:tidal_config["target_pane"] = input("tmux target pane: ", b:tidal_config["target_pane"], "custom,<SNR>" . s:SID() . "_TmuxPaneNames")
   if b:tidal_config["target_pane"] =~ '\s\+'
@@ -37,64 +69,89 @@ function! s:TmuxConfig() abort
 endfunction
 
 
+
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Terminal
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let s:tidal_term = -1
 
-function! s:TerminalOpen()
-  if !has('nvim')
-    echom "'terminal' target currently supported on NeoVim only. Use 'tmux'"
-    return
-  endif
+" NVim Terminal Implementation
+" ============================
+if has('nvim')
+  function! s:TerminalOpen()
+    if s:tidal_term != -1
+      return
+    endif
 
-  if s:tidal_term != -1
-    return
-  endif
+    split term://tidal
 
-  split term://tidal
+    let s:tidal_term = b:terminal_job_id
 
-  let s:tidal_term = b:terminal_job_id
+    " Give tidal a moment to start up so the command doesn't show up at the top
+    " unaesthetically.
+    " But this isn't very robust.
+    sleep 500m
 
-  " Give tidal a moment to start up so the command doesn't show up at the top
-  " unaesthetically.
-  " But this isn't very robust.
-  sleep 500m
+    " Make terminal scroll to follow output
+    :exe "normal G"
 
-  " Make terminal scroll to follow output
-  :exe "normal G"
+    " Make small & on the bottom.
+    :exe "normal \<c-w>J"
+    :exe "normal \<c-w>\<c-w>"
+    :exe "normal \<c-w>_"
+    :exe "normal \<c-w>10-"
+  endfunction
 
-  " Make small & on the bottom.
-  :exe "normal \<c-w>J"
-  :exe "normal \<c-w>\<c-w>"
-  :exe "normal \<c-w>_"
-  :exe "normal \<c-w>10-"
-endfunction
+  function! s:TerminalSend(config, text)
+    call s:TerminalOpen()
+    call jobsend(s:tidal_term, a:text)
+  endfunction
 
-function! s:TerminalSend(config, text)
-  call s:TerminalOpen()
-  call jobsend(s:tidal_term, a:text)
-endfunction
+  " These two are unnecessary AFAIK.
+  function! s:TerminalPaneNames(A,L,P)
+  endfunction
 
-" These two are unnecessary AFAIK.
-function! s:TerminalPaneNames(A,L,P)
-endfunction
-function! s:TerminalConfig() abort
-endfunction
+  function! s:TerminalConfig() abort
+  endfunction
+
+" Vim Terminal Implementation
+" ============================
+elseif has('terminal')
+  function! s:TerminalOpen()
+    if s:tidal_term != -1
+      return
+    endif
+    let startup = s:parent_path . "/Tidal.ghci"
+    execute ("below terminal ++rows=10 stack exec -- ghci -XOverloadedStrings -ghci-script=" . startup)
+    execute ("file tidal")
+    wincmd p
+  endfunction
+
+  function! s:TerminalSend(config, text)
+    call s:TerminalOpen()
+    let pieces = s:_EscapeText(a:text)
+    for piece in pieces
+      call term_sendkeys("tidal", piece . "\<CR>")
+    endfor
+  endfunction
+
+  " These two are unnecessary AFAIK.
+  function! s:TerminalPaneNames(A,L,P)
+  endfunction
+
+  function! s:TerminalConfig() abort
+  endfunction
+endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Helpers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-function! s:SID()
-  return matchstr(expand('<sfile>'), '<SNR>\zs\d\+\ze_SID$')
-endfun
-
-function! s:WritePasteFile(text)
-  " could check exists("*writefile")
-  call system("cat > " . g:tidal_paste_file, a:text)
-endfunction
+""""""""""
+" Helpers
+""""""""""
 
 function! s:_EscapeText(text)
   if exists("&filetype")
@@ -135,9 +192,9 @@ function! s:TidalFlashVisualSelection()
   silent exe "normal! vv"
 endfunction
 
+
 function! s:TidalSendOp(type, ...) abort
   call s:TidalGetConfig()
-
   let sel_save = &selection
   let &selection = "inclusive"
   let rv = getreg('"')
@@ -170,7 +227,6 @@ endfunction
 
 function! s:TidalSendRange() range abort
   call s:TidalGetConfig()
-
   let rv = getreg('"')
   let rt = getregtype('"')
   silent execute a:firstline . ',' . a:lastline . 'yank'
@@ -178,9 +234,9 @@ function! s:TidalSendRange() range abort
   call setreg('"', rv, rt)
 endfunction
 
+
 function! s:TidalSendLines(count) abort
   call s:TidalGetConfig()
-
   let rv = getreg('"')
   let rt = getregtype('"')
 
@@ -197,6 +253,7 @@ function! s:TidalSendLines(count) abort
   call s:TidalFlashVisualSelection()
 endfunction
 
+
 function! s:TidalStoreCurPos()
   if g:tidal_preserve_curpos == 1
     if exists("*getcurpos")
@@ -207,13 +264,12 @@ function! s:TidalStoreCurPos()
   endif
 endfunction
 
+
 function! s:TidalRestoreCurPos()
   if g:tidal_preserve_curpos == 1
     call setpos('.', s:cur)
   endif
 endfunction
-
-let s:parent_path = fnamemodify(expand("<sfile>"), ":p:h:s?/plugin??")
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Public interface
@@ -278,6 +334,7 @@ function! s:TidalGenerateCompletions(path)
   " setup completion
   let &l:dictionary .= ',' . l:output_path
 endfunction
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Setup key bindings
