@@ -1,1 +1,1 @@
-autocmd BufRead,BufNewFile *.tidal setfiletype tidal
+au BufRead,BufNewFile *.tidal setfiletype tidal
