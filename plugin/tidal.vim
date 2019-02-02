@@ -127,7 +127,7 @@ elseif has('terminal')
       return
     endif
     let startup = s:parent_path . "/Tidal.ghci"
-    execute ("below terminal ++rows=10 " . g:tidal_ghci . " -XOverloadedStrings -ghci-script=" . startup)
+    execute ("below terminal ++rows=10 " . g:tidal_ghci . " -ghci-script=" . startup)
     execute ("file tidal")
     wincmd p
   endfunction
