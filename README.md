@@ -56,7 +56,7 @@ For example, with Plug you need to:
   * Edit your `.vimrc` file and add these lines:
 
 ```vim
-Plug 'tidalcycles/vim-tidal'
+Plug 'flupe/vim-tidal'
 ```
 
   * Restart Vim and execute `:PlugInstall` to automatically download and
@@ -196,6 +196,19 @@ the lower pane.
 
 
 ## Configure ##
+
+### GHCI
+
+By default, `vim-tidal` uses the globally installed GHCI to launch the REPL.
+If you have installed Tidal through Stack (`stack install tidal`),
+you can specify another command to use with `g:tidal_ghci`.
+
+For example, if one installed Tidal with Stack, they would use:
+
+```vim
+let g:tidal_ghci = "stack exec ghci --"
+```
+
 
 ### Default bindings ###
 

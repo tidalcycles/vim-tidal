@@ -32,9 +32,14 @@ if !exists("g:tidal_flash_duration")
   let g:tidal_flash_duration = 150
 end
 
+if !exists("g:tidal_ghci")
+  let g:tidal_ghci = "ghci"
+end
+
 if filereadable(s:parent_path . "/.dirt-samples")
   let &l:dictionary .= ',' . s:parent_path . "/.dirt-samples"
 endif
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Tmux
@@ -67,8 +72,6 @@ function! s:TmuxConfig() abort
     let b:tidal_config["target_pane"] = split(b:tidal_config["target_pane"])[0]
   endif
 endfunction
-
-
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -123,7 +126,7 @@ elseif has('terminal')
       return
     endif
     let startup = s:parent_path . "/Tidal.ghci"
-    execute ("below terminal ++rows=10 stack exec -- ghci -XOverloadedStrings -ghci-script=" . startup)
+    execute ("below terminal ++rows=10 " . g:tidal_ghci . " -XOverloadedStrings -ghci-script=" . startup)
     execute ("file tidal")
     wincmd p
   endfunction
