@@ -21,8 +21,7 @@ function setdir {
 setdir
 
 TIDAL_BOOT_PATH=${TIDAL_BOOT_PATH:-"$DIR/../Tidal.ghci"}
-TIDAL_TEMPO_IP=${TIDAL_TEMPO_IP:-"127.0.0.1"}
 GHCI=${GHCI:-"ghci"}
 
 # Run GHCI and load Tidal bootstrap file
-TIDAL_TEMPO_IP=$TIDAL_TEMPO_IP $GHCI -XOverloadedStrings -ghci-script $TIDAL_BOOT_PATH "$@"
+$GHCI -ghci-script $TIDAL_BOOT_PATH "$@"

@@ -8,7 +8,6 @@ FILE=${FILE:-"$(date +%F).tidal"}
 SESSION=${SESSION:-"tidal"}
 
 TIDAL_BOOT_PATH=${TIDAL_BOOT_PATH:-""}
-TIDAL_TEMPO_IP=${TIDAL_TEMPO_IP:-""}
 GHCI=${GHCI:-""}
 
 args=${@:-$FILE}
@@ -19,5 +18,5 @@ $TMUX -2 attach-session -t $SESSION || $TMUX -2 \
   new-session -s $SESSION   \; \
   split-window -v -t $SESSION   \; \
   send-keys -t 0 "$VIM $args" C-m   \; \
-  send-keys -t 1 "TIDAL_BOOT_PATH=$TIDAL_BOOT_PATH TIDAL_TEMPO_IP=$TIDAL_TEMPO_IP GHCI=$GHCI tidal" C-m   \; \
+  send-keys -t 1 "TIDAL_BOOT_PATH=$TIDAL_BOOT_PATH GHCI=$GHCI tidal" C-m   \; \
   select-pane -t 0
