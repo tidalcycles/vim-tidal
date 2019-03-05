@@ -89,10 +89,6 @@ You can remove them later if you want with `make uninstall`.
 Make sure to have the `filetype plugin on` setting on your .vimrc, otherwise
 plugin won't be loaded when opening a .tidal file.
 
-Also, installing [haskell-vim](https://github.com/neovimhaskell/haskell-vim)
-plugin is recommended.  Vim by default has some issues with syntax highlighting
-Haskell code, especially when using some valid infix operators like `#`.
-
 ### Older Tidal versions (pre 1.0) ###
 
 Tidal 1.0 introduces some breaking changes, so if haven't upgraded yet, you can
@@ -351,6 +347,9 @@ this to sending current paragraph. If this is happening you either:
 2. Have `g:tidal_no_mappings` setting on your `.vimrc`. This disables all
    mappings.
    *Solution*: Remove `<c-e>` binding, or rebind to something else.
+
+It could also be that you do not have `filetype plugin on` setting in your
+.vimrc.  Make sure you have that setting defined.
 
 > I press `<c-e>` and nothing else happens
 
