@@ -89,6 +89,10 @@ You can remove them later if you want with `make uninstall`.
 Make sure to have the `filetype plugin on` setting on your .vimrc, otherwise
 plugin won't be loaded when opening a .tidal file.
 
+Also, installing [haskell-vim](https://github.com/neovimhaskell/haskell-vim)
+plugin is recommended.  Vim by default has some issues with syntax highlighting
+Haskell code, especially when using some valid infix operators like `#`.
+
 ### Older Tidal versions (pre 1.0) ###
 
 Tidal 1.0 introduces some breaking changes, so if haven't upgraded yet, you can
