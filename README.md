@@ -86,6 +86,9 @@ Finally, go to the plugin repository and run `make install`:
 This creates symlinks on `/usr/local/bin` for `tidal` and `tidalvim` scripts.
 You can remove them later if you want with `make uninstall`.
 
+Make sure to have the `filetype plugin on` setting on your .vimrc, otherwise
+plugin won't be loaded when opening a .tidal file.
+
 ### Older Tidal versions (pre 1.0) ###
 
 Tidal 1.0 introduces some breaking changes, so if haven't upgraded yet, you can
