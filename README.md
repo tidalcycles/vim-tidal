@@ -34,9 +34,7 @@ It was originally based on [vim-slime](https://github.com/jpalardy/vim-slime).
 
 ## Install ##
 
-Make sure you have TidalCycles installed, with SuperDirt running. See [Getting
-Started with Tidal](https://tidalcycles.org/getting_started.html) page for more
-information.
+Make sure you have TidalCycles installed, with SuperDirt running. See [the Tidal wiki](https://tidalcycles.org/index.php/Userbase) for more information.
 
 ### Install tmux ###
 
