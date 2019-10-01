@@ -38,40 +38,49 @@ endfunction
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Term
+" Terminal
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let s:tidal_term = -1
-function! s:NvimTermOpen()
-    if s:tidal_term != -1
-        return
-    endif
-    split term://tidal
-    let s:tidal_term = b:terminal_job_id
 
-    " Give tidal a moment to start up so the command doesn't show up at the top unaesthetically.
-    " But this isn't very robust.
-    sleep 500m
+function! s:TerminalOpen()
+  if !has('nvim')
+    echom "'terminal' target currently supported on NeoVim only. Use 'tmux'"
+    return
+  endif
 
-    " Make terminal scroll to follow output
-    :exe "normal G"
+  if s:tidal_term != -1
+    return
+  endif
 
-    " Make small & on the bottom.
-    :exe "normal \<c-w>J"
-    :exe "normal \<c-w>\<c-w>"
-    :exe "normal \<c-w>_"
-    :exe "normal \<c-w>10-"
+  split term://tidal
+
+  let s:tidal_term = b:terminal_job_id
+
+  " Give tidal a moment to start up so the command doesn't show up at the top
+  " unaesthetically.
+  " But this isn't very robust.
+  sleep 500m
+
+  " Make terminal scroll to follow output
+  :exe "normal G"
+
+  " Make small & on the bottom.
+  :exe "normal \<c-w>J"
+  :exe "normal \<c-w>\<c-w>"
+  :exe "normal \<c-w>_"
+  :exe "normal \<c-w>10-"
 endfunction
 
-function! s:NvimSend(config, text)
-    call s:NvimTermOpen()
-    call jobsend(s:tidal_term, a:text)
+function! s:TerminalSend(config, text)
+  call s:TerminalOpen()
+  call jobsend(s:tidal_term, a:text)
 endfunction
 
 " These two are unnecessary AFAIK.
-function! s:NvimPaneNames(A,L,P)
+function! s:TerminalPaneNames(A,L,P)
 endfunction
-function! s:NvimConfig() abort
+function! s:TerminalConfig() abort
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -295,12 +304,7 @@ noremap <unique> <script> <silent> <Plug>TidalConfig :<c-u>TidalConfig<cr>
 " Default options
 "
 if !exists("g:tidal_target")
-  if has("nvim")
-    " Regular vim has recently scored a terminal, but its API is different.
-    let g:tidal_target = "nvim"
-  else
-    let g:tidal_target = "tmux"
-  endif
+  let g:tidal_target = "tmux"
 endif
 
 if !exists("g:tidal_paste_file")
