@@ -1,11 +1,15 @@
 # vim-tidal #
 
-A Vim plugin for [TidalCycles](http://tidal.lurk.org/), the language for live
-coding musical patterns written in Haskell.
+A Vim/NeoVim plugin for [TidalCycles](http://tidal.lurk.org/), the language for
+live coding musical patterns written in Haskell.
 
-This plugin uses [tmux](https://tmux.github.io/), a known and loved terminal
-multiplexer, for communicating with between Vim and the Tidal interpreter.
-It was originally based on [vim-slime](https://github.com/jpalardy/vim-slime).
+This plugin by default uses [tmux](https://tmux.github.io/), a known and loved
+terminal multiplexer, for communicating with between Vim and the Tidal
+interpreter.  It was originally based on
+[vim-slime](https://github.com/jpalardy/vim-slime).
+
+**New**: If you are using NeoVim, you can now use the Terminal instead of tmux.
+Read the Configuration section on how to enable it.
 
 ![](http://i.imgur.com/frOLFFI.gif)
 
@@ -240,6 +244,22 @@ on the window 1 and pane 0.  In that case you would need to add this line:
 ```vim
 let g:tidal_default_config = {"socket_name": "default", "target_pane": "omg:1.0"}
 ```
+
+### NeoVim Terminal target ###
+
+If you are using NeoVim, you can ditch tmux and use the terminal. Add the
+following line on your configuration file:
+
+```vim
+let g:tidal_target = "terminal"
+```
+
+Quick overview of the terminal:
+
+1. The terminal defaults to insert mode.
+2. Enter terminal insert mode using eg. `i`.
+3. Exit terminal insert mode with `<C-\><C-n>`.
+4. You'll probably want to apply the `<A-k>` mappings mentioned in `:help terminal`.
 
 ### Miscelaneous ###
 
