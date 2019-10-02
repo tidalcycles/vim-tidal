@@ -15,36 +15,6 @@ function! Tab_to_spaces(text)
     return substitute(a:text, "	", Get_indent_string(), "g")
 endfunction
 
-" Check if line is commented out
-function! Is_comment(line)
-    return (match(a:line, "^[ \t]*--.*") >= 0)
-endfunction
-
-" Remove commented out lines
-function! Remove_line_comments(lines)
-    let l:i = 0
-    let l:len = len(a:lines)
-    let l:ret = []
-    while l:i < l:len
-        if !Is_comment(a:lines[l:i])
-            call add(l:ret, a:lines[l:i])
-        endif
-        let l:i += 1
-    endwhile
-    return l:ret
-endfunction
-
-" remove block comments
-function! Remove_block_comments(text)
-    return substitute(a:text, "{-.*-}", "", "g")
-endfunction
-
-" remove line comments
-" todo: fix this! it only removes one occurence whilst it should remove all.
-" function! Remove_line_comments(text)
-"     return substitute(a:text, "^[ \t]*--[^\n]*\n", "", "g")
-" endfunction
-
 " Wrap in :{ :} if there's more than one line
 function! Wrap_if_multi(lines)
     if len(a:lines) > 1
@@ -66,9 +36,7 @@ endfunction
 
 " vim slime handler
 function! _EscapeText_tidal(text)
-    "let l:text  = Remove_block_comments(a:text)
-    let l:lines = Lines(Tab_to_spaces(l:text))
-    "let l:lines = Remove_line_comments(l:lines)
+    let l:lines = Lines(Tab_to_spaces(a:text))
     let l:lines = Wrap_if_multi(l:lines)
     return Unlines(l:lines)
 endfunction
