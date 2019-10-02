@@ -66,9 +66,9 @@ endfunction
 
 " vim slime handler
 function! _EscapeText_tidal(text)
-    let l:text  = Remove_block_comments(a:text)
+    "let l:text  = Remove_block_comments(a:text)
     let l:lines = Lines(Tab_to_spaces(l:text))
-    let l:lines = Remove_line_comments(l:lines)
+    "let l:lines = Remove_line_comments(l:lines)
     let l:lines = Wrap_if_multi(l:lines)
     return Unlines(l:lines)
 endfunction
