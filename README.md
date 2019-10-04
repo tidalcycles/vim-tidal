@@ -12,6 +12,7 @@ interpreter.  It was originally based on
 Read the Configuration section on how to enable it. Likewise, if you are using
 Vim8, this extensions uses the terminal feature.
 
+[![asciicast](https://asciinema.org/a/224891.svg)](https://asciinema.org/a/224891)
 
 ## Getting Started ##
 
