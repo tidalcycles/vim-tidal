@@ -14,6 +14,7 @@ if !exists("g:tidal_target")
     let g:tidal_target = "terminal"
   else
     let g:tidal_target = "tmux"
+  endif
 endif
 
 if !exists("g:tidal_paste_file")
@@ -26,15 +27,15 @@ endif
 
 if !exists("g:tidal_preserve_curpos")
   let g:tidal_preserve_curpos = 1
-end
+endif
 
 if !exists("g:tidal_flash_duration")
   let g:tidal_flash_duration = 150
-end
+endif
 
 if !exists("g:tidal_ghci")
   let g:tidal_ghci = "ghci"
-end
+endif
 
 if filereadable(s:parent_path . "/.dirt-samples")
   let &l:dictionary .= ',' . s:parent_path . "/.dirt-samples"
@@ -80,16 +81,15 @@ endfunction
 
 let s:tidal_term = -1
 
-" NVim Terminal Implementation
-" ============================
-if has('nvim')
-  function! s:TerminalOpen()
-    if s:tidal_term != -1
-      return
-    endif
+" NVim and VIM8 Terminal Implementation
+" =====================================
+function! s:TerminalOpen()
+  if s:tidal_term != -1
+    return
+  endif
 
+  if has('nvim')
     split term://tidal
-
     let s:tidal_term = b:terminal_job_id
 
     " Give tidal a moment to start up so the command doesn't show up at the top
@@ -104,48 +104,36 @@ if has('nvim')
     :exe "normal \<c-w>x"
     :exe "normal \<c-w>_"
     :exe "normal \<c-w>10-"
-  endfunction
 
-  function! s:TerminalSend(config, text)
-    call s:TerminalOpen()
-    call jobsend(s:tidal_term, a:text)
-  endfunction
-
-  " These two are unnecessary AFAIK.
-  function! s:TerminalPaneNames(A,L,P)
-  endfunction
-
-  function! s:TerminalConfig() abort
-  endfunction
-
-" Vim Terminal Implementation
-" ============================
-elseif has('terminal')
-  function! s:TerminalOpen()
-    if s:tidal_term != -1
-      return
-    endif
+  elseif  has('terminal')
     let startup = s:parent_path . "/Tidal.ghci"
-    execute ("below terminal ++rows=10 " . g:tidal_ghci . " -ghci-script=" . startup)
-    execute ("file tidal")
-    wincmd p
-  endfunction
+    execute "below split"
+    let s:tidal_term = term_start((g:tidal_ghci . " -ghci-script=" . startup), #{
+          \ term_name: 'tidal',
+          \ term_rows: 10,
+          \ norestore: 1,
+          \ curwin: 1,
+          \ })
+    wincmd p " return focus to previous buffer
+  endif
+endfunction
 
-  function! s:TerminalSend(config, text)
-    call s:TerminalOpen()
-    let pieces = s:_EscapeText(a:text)
-    for piece in pieces
-      call term_sendkeys("tidal", piece . "\<CR>")
-    endfor
-  endfunction
+function! s:TerminalSend(config, text)
+  call s:TerminalOpen()
+  if has('nvim')
+    call jobsend(s:tidal_term, a:text . "\<CR>")
+  elseif has('terminal')
+    call term_sendkeys(s:tidal_term, a:text . "\<CR>")
+  endif
+endfunction
 
-  " These two are unnecessary AFAIK.
-  function! s:TerminalPaneNames(A,L,P)
-  endfunction
+" These two are unnecessary AFAIK.
+function! s:TerminalPaneNames(A,L,P)
+endfunction
 
-  function! s:TerminalConfig() abort
-  endfunction
-endif
+function! s:TerminalConfig() abort
+endfunction
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Helpers
@@ -344,7 +332,7 @@ endfunction
 
 command -bar -nargs=0 TidalConfig call s:TidalConfig()
 command -range -bar -nargs=0 TidalSend <line1>,<line2>call s:TidalSendRange()
-command -nargs=+ TidalSend1 call s:TidalSend(<q-args> . "\r")
+command -nargs=+ TidalSend1 call s:TidalSend(<q-args>)
 
 command! -nargs=0 TidalHush call s:TidalHush()
 command! -nargs=1 TidalSilence call s:TidalSilence(<args>)
@@ -358,30 +346,3 @@ noremap <unique> <script> <silent> <Plug>TidalLineSend :<c-u>call <SID>TidalSend
 noremap <unique> <script> <silent> <Plug>TidalMotionSend <SID>Operator
 noremap <unique> <script> <silent> <Plug>TidalParagraphSend <SID>Operatorip
 noremap <unique> <script> <silent> <Plug>TidalConfig :<c-u>TidalConfig<cr>
-
-""
-" Default options
-"
-if !exists("g:tidal_target")
-  let g:tidal_target = "tmux"
-endif
-
-if !exists("g:tidal_paste_file")
-  let g:tidal_paste_file = tempname()
-endif
-
-if !exists("g:tidal_default_config")
-  let g:tidal_default_config = { "socket_name": "default", "target_pane": ":0.1" }
-endif
-
-if !exists("g:tidal_preserve_curpos")
-  let g:tidal_preserve_curpos = 1
-end
-
-if !exists("g:tidal_flash_duration")
-  let g:tidal_flash_duration = 150
-end
-
-if filereadable(s:parent_path . "/.dirt-samples")
-  let &l:dictionary .= ',' . s:parent_path . "/.dirt-samples"
-endif
