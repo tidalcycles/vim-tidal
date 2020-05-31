@@ -44,18 +44,17 @@ endfunction
 let s:tidal_term = -1
 
 function! s:TerminalOpen()
-  if !has('nvim')
-    echom "'terminal' target currently supported on NeoVim only. Use 'tmux'"
-    return
-  endif
-
   if s:tidal_term != -1
     return
   endif
 
-  split term://tidal
-
-  let s:tidal_term = b:terminal_job_id
+  if has('nvim')
+    split term://tidal
+    let s:tidal_term = b:terminal_job_id
+  else
+    term tidal
+    let s:tidal_term = 2
+  endif
 
   " Give tidal a moment to start up so the command doesn't show up at the top
   " unaesthetically.
@@ -74,7 +73,11 @@ endfunction
 
 function! s:TerminalSend(config, text)
   call s:TerminalOpen()
-  call jobsend(s:tidal_term, a:text)
+  if has('nvim')
+    call jobsend(s:tidal_term, a:text)
+  else
+    call term_sendkeys(s:tidal_term, a:text)
+  end
 endfunction
 
 " These two are unnecessary AFAIK.
