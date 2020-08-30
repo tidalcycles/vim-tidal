@@ -254,6 +254,10 @@ following line on your configuration file:
 let g:tidal_target = "terminal"
 ```
 
+Open a file with a `.tidal` suffix, write and send a line of code to tidal, and the tidal terminal will open in a window below your editor.
+
+Use standard vim window navigation controls to focus the terminal (ie `<C-w> down/up`)
+
 Quick overview of the terminal:
 
 1. The terminal defaults to insert mode.
@@ -261,7 +265,7 @@ Quick overview of the terminal:
 3. Exit terminal insert mode with `<C-\><C-n>`.
 4. You'll probably want to apply the `<A-k>` mappings mentioned in `:help terminal`.
 
-### Miscelaneous ###
+### Miscellaneous ###
 
 When sending a paragraph or a single line, vim-tidal will "flash" the selection
 for some milliseconds.  By default duration is set to 150ms, but you can modify
