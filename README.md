@@ -271,6 +271,9 @@ When sending a paragraph or a single line, vim-tidal will "flash" the selection
 for some milliseconds.  By default duration is set to 150ms, but you can modify
 it by setting the `g:tidal_flash_duration` variable.
 
+Write the paste buffer to an external text file:
+`let g:tidal_paste_file = "/tmp/tidal_paste_file.txt"`
+
 For customizing the startup script for defining helper functions, see below.
 
 
