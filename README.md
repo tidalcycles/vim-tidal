@@ -1,6 +1,6 @@
 # vim-tidal #
 
-A Vim/NeoVim plugin for [TidalCycles](http://tidal.lurk.org/), the language for
+A Vim/NeoVim plugin for [TidalCycles](http://tidalcycles.org), the language for
 live coding musical patterns written in Haskell.
 
 This plugin by default uses [tmux](https://tmux.github.io/), a known and loved
@@ -56,9 +56,8 @@ You can install it from the main repos:
 
 There seems to be [a Cygwin package for
 tmux](https://cygwin.com/cgi-bin2/package-cat.cgi?file=x86%2Ftmux%2Ftmux-1.9a-1&grep=tmux),
-but I haven't tested this plugin on Windows anyway, so you are on your own here.
+but at present it is [not working](https://github.com/microsoft/terminal/issues/5132#issuecomment-604560893) with any known terminal emulator for Windows. As such, this plugin has only been tested with the *Windows native* build of [Neovim](https://github.com/tidalcycles/vim-tidal#neovim-terminal-target).
 
-If you happen to make it work, let me know so I can update this section!
 
 ### Install plugin ###
 
@@ -80,13 +79,31 @@ Plug 'tidalcycles/vim-tidal'
   * Restart Vim and execute `:PlugInstall` to automatically download and
     install the plugins.
 
-Finally, go to the plugin repository and run `make install`:
+#### UNIX-based Systems ####
+
+If you are on a UNIX-based operating system (Linux distributions, MacOS, etc.), go to the plugin repository and run `make install`:
 
     $ cd ~/.vim/plugged/vim-tidal
     $ sudo make install
 
 This creates symlinks on `/usr/local/bin` for `tidal` and `tidalvim` scripts.
 You can remove them later if you want with `make uninstall`.
+
+#### Windows ####
+
+:warning: **This plugin has only been tested on Windows 10 using Neovim >0.5**
+
+If you are on Windows, add the `vim-tidal\bin` directory to your `PATH` user environment variable:
+
+    1. Click the `Start` button
+    2. Type "Edit the system environment variables" and hit `enter` or click on the search result
+    3. Click the button labeled `Environment variables...`
+    4. In the `User variables for [username]` table, click the entry for the `Path` variable, followed by the `Edit...` button beneath the same table
+    5. Click the `New` button in the following dialog, enter the *full path* to the `vim-tidal\bin` directory, and click `OK` until all the preceding dialogs are closed.
+
+Note: The full path to the `vim-tidal\bin` directory, will look something like `C:\Users\[username]\AppData\Local\nvim\plugged\vim-tidal\bin`, assuming you are using vim-plug as this document recommends.
+
+#### Final Installation Note ####
 
 Make sure to have the `filetype plugin on` setting on your .vimrc, otherwise
 plugin won't be loaded when opening a .tidal file.
@@ -247,7 +264,7 @@ let g:tidal_default_config = {"socket_name": "default", "target_pane": "omg:1.0"
 
 ### NeoVim Terminal target ###
 
-If you are using NeoVim, you can ditch tmux and use the terminal. Add the
+If you are using NeoVim, you can ditch tmux and use the built-in terminal. Add the
 following line on your configuration file:
 
 ```vim
