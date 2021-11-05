@@ -7,4 +7,4 @@ REM Get path to vim-tidal bootfile
 SET "TIDAL_BOOT_PATH=%SOURCE%\..\Tidal.ghci"
 
 REM Launch Tidal Cycles
-ghci -ghci-script %TIDAL_BOOT_PATH% "%*"
+ghci -ghci-script "%TIDAL_BOOT_PATH%"
