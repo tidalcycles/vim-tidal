@@ -66,8 +66,7 @@ function! s:TerminalOpen()
   :exe "normal G"
 
   " Make small & on the bottom.
-  :exe "normal \<c-w>J"
-  :exe "normal \<c-w>\<c-w>"
+  :exe "normal \<c-w>x"
   :exe "normal \<c-w>_"
   :exe "normal \<c-w>10-"
 endfunction
