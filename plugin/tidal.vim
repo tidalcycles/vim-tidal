@@ -53,7 +53,7 @@ function! s:TerminalOpen()
     return
   endif
 
-  split term://tidal
+  split term://../bin/tidal
 
   let s:tidal_term = b:terminal_job_id
 
