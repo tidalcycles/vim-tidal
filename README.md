@@ -83,6 +83,8 @@ Plug 'tidalcycles/vim-tidal'
 
 If you are on a UNIX-based operating system (Linux distributions, MacOS, etc.), go to the plugin repository and run `make install`:
 
+(if you are using NeoVim and you won't run tmux then you don't need to run `make install` to be able to load the plugin inside NeoVim)
+
     $ cd ~/.vim/plugged/vim-tidal
     $ sudo make install
 
