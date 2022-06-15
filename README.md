@@ -14,12 +14,6 @@ Vim8, this extensions uses the terminal feature.
 
 [![asciicast](https://asciinema.org/a/224891.svg)](https://asciinema.org/a/224891)
 
-## Getting Started ##
-
-   When inside Vim, run the command `:TidalStart`.
-   A new pane should appear below with Tidal running.
-
-
 ## Install ##
 
 Make sure you have TidalCycles installed, with SuperDirt running. See [the Tidal wiki](https://tidalcycles.org/index.php/Userbase) for more information.
@@ -106,7 +100,7 @@ First change your Plug line on your `.vimrc` to:
 Plug 'tidalcycles/vim-tidal', {'branch': 'tidal-0.9'}
 ```
 
-Then on Vim run `:PlugInstall` to update your plugin. 
+Then on Vim run `:PlugInstall` to update your plugin.
 
 
 ## Usage
