@@ -8,11 +8,34 @@ terminal multiplexer, for communicating with between Vim and the Tidal
 interpreter.  It was originally based on
 [vim-slime](https://github.com/jpalardy/vim-slime).
 
-**New**: If you are using NeoVim, you can now use the Terminal instead of tmux.
-Read the Configuration section on how to enable it. Likewise, if you are using
-Vim8, this extensions uses the terminal feature.
+![](http://i.imgur.com/frOLFFI.gif)
+
+If you are using Vim8 or NeoVim, you can use the native Terminal feature instead
+of tmux. Read the Configuration section on how to enable it.
 
 [![asciicast](https://asciinema.org/a/224891.svg)](https://asciinema.org/a/224891)
+
+## Getting Started ##
+
+1. Start livecoding with Vim by simply running:
+
+   ```bash
+   $ tidalvim
+   ```
+
+   This creates a tmux session with Vim and Tidal running on different panes.
+
+2. Write something like this:
+
+   ```haskell
+   d1 $ sound "bd sn"
+   ```
+
+3. While being on that line, press `<c-e>` (Control + E) to evaluate it.
+
+   You should see Vim flash that line for a second and a chunk of text appear on
+   your Tidal interpreter.  If you already have SuperDirt or other synth running,
+   you should hear a kick and a snare :)
 
 ## Install ##
 
@@ -51,7 +74,7 @@ For example, with Plug you need to:
   * Edit your `.vimrc` file and add these lines:
 
 ```vim
-Plug 'flupe/vim-tidal'
+Plug 'tidalcycles/vim-tidal'
 ```
 
   * Restart Vim and execute `:PlugInstall` to automatically download and
@@ -154,21 +177,33 @@ These are some of the commands that can be run from Vim command line:
 * `:TidalSend1 {text}`: Send a single line of text specified on the command
   line.
 
+* `:TidalConfig`: Configure tmux socket name and target pane
+
+* `:TidalSilence [num]`: Silence stream number `[num]` by sending `d[num]
+  silence`.
+
+* `:TidalPlay [num]`: Send first ocurrence of stream number `[num`] from the
+  current cursor position.
+
 * `:TidalHush`: Silences all streams by sending `hush`.
 
+* `:TidalGenerateCompletions {path}`: Generate dictionary for Dirt-Samples
+  completion (path is optional).
 
 ### Default bindings
 
 Using one of these key bindings you can send lines to Tidal:
 
-* `<c-e>` (Control+E), `<localleader><localleader>`: Send current inner paragraph.
+* `<c-e>` (Control+E), `<localleader>ss`: Send current inner paragraph.
 * `<localleader>s`: Send current line or current visually selected block.
 
 `<c-e>` can be called on either Normal, Visual, Select or Insert mode, so it is
-probably easier to type than `<localleader><localleader>` or `<localleader>s`.
+probably easier to type than `<localleader>ss` or `<localleader>s`.
 
 There are other bindings to control Tidal like:
 
+* `<localleader>s[num]`: Call `:TidalPlay [num]`
+* `<localleader>[num]`: Call `:TidalSilence [num]`
 * `<localleader>h`, `<c-h>`: Call `:TidalHush`
 
 #### About `<localleader>`
@@ -195,15 +230,14 @@ the lower pane.
 ### GHCI
 
 By default, `vim-tidal` uses the globally installed GHCI to launch the REPL.
-If you have installed Tidal through Stack (`stack install tidal`),
-you can specify another command to use with `g:tidal_ghci`.
+If you have installed Tidal through Stack (`stack install tidal`) or some other
+means, you can specify another command to use with `g:tidal_ghci`.
 
 For example, if one installed Tidal with Stack, they would use:
 
 ```vim
 let g:tidal_ghci = "stack exec ghci --"
 ```
-
 
 ### Default bindings ###
 
@@ -221,6 +255,28 @@ let g:tidal_no_mappings = 1
 See section Mappings on [ftplugin/tidal.vim](ftplugin/tidal.vim) and copy the
 bindings you like to your `.vimrc` file and modify them.
 
+### tmux target ###
+
+You can configure tmux socket name and target pane by typing `<localleader>c`
+or `:TidalConfig`.  This will prompt you first for the socket name, then for
+the target pane.
+
+About the target pane:
+
+* `":"` means current window, current pane (a reasonable default)
+* `":i"` means the ith window, current pane
+* `":i.j"` means the ith window, jth pane
+* `"h:i.j"` means the tmux session where h is the session identifier (either
+  session name or number), the ith window and the jth pane
+
+When you exit Vim you will lose that configuration. To make this permanent, set
+`g:tidal_default_config` on your `.vimrc`.  For example, suppose you want to run
+Tidal on a tmux session named `omg`, and the GHCi interpreter will be running
+on the window 1 and pane 0.  In that case you would need to add this line:
+
+```vim
+let g:tidal_default_config = {"socket_name": "default", "target_pane": "omg:1.0"}
+```
 
 ### NeoVim Terminal target ###
 
@@ -378,6 +434,7 @@ Bug reports and pull requests are welcome on GitHub at
 safe, welcoming space for collaboration, and contributors are expected to
 adhere to the [Contributor Covenant](http://contributor-covenant.org) code of
 conduct.
+
 
 ## License
 

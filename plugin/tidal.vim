@@ -1,7 +1,6 @@
 if exists("g:loaded_tidal") || &cp || v:version < 700
   finish
 endif
-
 let g:loaded_tidal = 1
 let s:parent_path = fnamemodify(expand("<sfile>"), ":p:h:s?/plugin??")
 
@@ -41,7 +40,6 @@ if filereadable(s:parent_path . "/.dirt-samples")
   let &l:dictionary .= ',' . s:parent_path . "/.dirt-samples"
 endif
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Tmux
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -67,6 +65,7 @@ function! s:TmuxConfig() abort
   if !exists("b:tidal_config")
     let b:tidal_config = {"socket_name": "default", "target_pane": ":"}
   end
+
   let b:tidal_config["socket_name"] = input("tmux socket name: ", b:tidal_config["socket_name"])
   let b:tidal_config["target_pane"] = input("tmux target pane: ", b:tidal_config["target_pane"], "custom,<SNR>" . s:SID() . "_TmuxPaneNames")
   if b:tidal_config["target_pane"] =~ '\s\+'
@@ -105,7 +104,7 @@ function! s:TerminalOpen()
     :exe "normal \<c-w>_"
     :exe "normal \<c-w>10-"
 
-  elseif  has('terminal')
+  elseif has('terminal')
     let startup = s:parent_path . "/Tidal.ghci"
     execute "below split"
     let s:tidal_term = term_start((g:tidal_ghci . " -ghci-script=" . startup), #{
@@ -130,18 +129,21 @@ endfunction
 " These two are unnecessary AFAIK.
 function! s:TerminalPaneNames(A,L,P)
 endfunction
-
 function! s:TerminalConfig() abort
 endfunction
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Helpers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-""""""""""
-" Helpers
-""""""""""
+function! s:SID()
+  return matchstr(expand('<sfile>'), '<SNR>\zs\d\+\ze_SID$')
+endfun
+
+function! s:WritePasteFile(text)
+  " could check exists("*writefile")
+  call system("cat > " . g:tidal_paste_file, a:text)
+endfunction
 
 function! s:_EscapeText(text)
   if exists("&filetype")
@@ -182,9 +184,9 @@ function! s:TidalFlashVisualSelection()
   silent exe "normal! vv"
 endfunction
 
-
 function! s:TidalSendOp(type, ...) abort
   call s:TidalGetConfig()
+
   let sel_save = &selection
   let &selection = "inclusive"
   let rv = getreg('"')
@@ -217,6 +219,7 @@ endfunction
 
 function! s:TidalSendRange() range abort
   call s:TidalGetConfig()
+
   let rv = getreg('"')
   let rt = getregtype('"')
   silent execute a:firstline . ',' . a:lastline . 'yank'
@@ -224,9 +227,9 @@ function! s:TidalSendRange() range abort
   call setreg('"', rv, rt)
 endfunction
 
-
 function! s:TidalSendLines(count) abort
   call s:TidalGetConfig()
+
   let rv = getreg('"')
   let rt = getregtype('"')
 
@@ -243,7 +246,6 @@ function! s:TidalSendLines(count) abort
   call s:TidalFlashVisualSelection()
 endfunction
 
-
 function! s:TidalStoreCurPos()
   if g:tidal_preserve_curpos == 1
     if exists("*getcurpos")
@@ -253,7 +255,6 @@ function! s:TidalStoreCurPos()
     endif
   endif
 endfunction
-
 
 function! s:TidalRestoreCurPos()
   if g:tidal_preserve_curpos == 1
@@ -324,7 +325,6 @@ function! s:TidalGenerateCompletions(path)
   " setup completion
   let &l:dictionary .= ',' . l:output_path
 endfunction
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Setup key bindings
