@@ -36,6 +36,10 @@ if !exists("g:tidal_ghci")
   let g:tidal_ghci = "ghci"
 endif
 
+if !exists("g:tidal_boot")
+  let g:tidal_boot = s:parent_path . "/Tidal.ghci"
+endif
+
 if filereadable(s:parent_path . "/.dirt-samples")
   let &l:dictionary .= ',' . s:parent_path . "/.dirt-samples"
 endif
@@ -105,9 +109,8 @@ function! s:TerminalOpen()
     :exe "normal \<c-w>10-"
 
   elseif has('terminal')
-    let startup = s:parent_path . "/Tidal.ghci"
     execute "below split"
-    let s:tidal_term = term_start((g:tidal_ghci . " -ghci-script=" . startup), #{
+    let s:tidal_term = term_start((g:tidal_ghci . " -ghci-script=" . g:tidal_boot), #{
           \ term_name: 'tidal',
           \ term_rows: 10,
           \ norestore: 1,
