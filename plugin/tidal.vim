@@ -57,6 +57,17 @@ if !exists("g:tidal_boot")
   endif
 endif
 
+if !exists("g:tidal_superdirt_enable")
+  " Allow vim-tidal to automatically start SuperDirt. Disabled by default.
+  let g:tidal_superdirt_enable = 0
+endif
+
+if !exists("g:tidal_superdirt_start")
+  " A command that can be run from the terminal to start SuperDirt.
+  " The default assumes `SuperDirt` is installed.
+  let g:tidal_superdirt_start = "sclang " . s:parent_path . "/SuperDirt-start.sc"
+endif
+
 if filereadable(s:parent_path . "/.dirt-samples")
   let &l:dictionary .= ',' . s:parent_path . "/.dirt-samples"
 endif
@@ -99,18 +110,19 @@ endfunction
 " Terminal
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let s:tidal_term = -1
+let s:tidal_term_ghci = -1
+let s:tidal_term_superdirt = -1
 
 " NVim and VIM8 Terminal Implementation
 " =====================================
 function! s:TerminalOpen()
-  if s:tidal_term != -1
-    return
-  endif
-
   if has('nvim')
+    if s:tidal_term_ghci != -1
+      return
+    endif
+
     split term://tidal
-    let s:tidal_term = b:terminal_job_id
+    let s:tidal_term_ghci = b:terminal_job_id
 
     " Give tidal a moment to start up so the command doesn't show up at the top
     " unaesthetically.
@@ -126,23 +138,42 @@ function! s:TerminalOpen()
     :exe "normal \<c-w>10-"
 
   elseif has('terminal')
-    execute "below split"
-    let s:tidal_term = term_start((g:tidal_ghci . " -ghci-script=" . g:tidal_boot), #{
-          \ term_name: 'tidal',
-          \ term_rows: 10,
-          \ norestore: 1,
-          \ curwin: 1,
-          \ })
-    wincmd p " return focus to previous buffer
+    " Keep track of the current window number so we can switch back.
+    let current_win = winnr()
+
+    " Open a Terminal with GHCI with tidal booted.
+    if s:tidal_term_ghci == -1
+      execute "below split"
+      let s:tidal_term_ghci = term_start((g:tidal_ghci . " -ghci-script=" . g:tidal_boot), #{
+            \ term_name: 'tidal',
+            \ term_rows: 10,
+            \ norestore: 1,
+            \ curwin: 1,
+            \ })
+    endif
+
+    " Open a terminal with SuperDirt running.
+    if g:tidal_superdirt_enable == 1 && s:tidal_term_superdirt == -1
+      execute "vert split"
+      let s:tidal_term_superdirt = term_start(g:tidal_superdirt_start, #{
+           \ term_name: 'superdirt',
+           \ term_rows: 10,
+           \ norestore: 1,
+           \ curwin: 1,
+           \ })
+    endif
+
+    " Return focus to the original window.
+    execute current_win .. "wincmd w"
   endif
 endfunction
 
 function! s:TerminalSend(config, text)
   call s:TerminalOpen()
   if has('nvim')
-    call jobsend(s:tidal_term, a:text . "\<CR>")
+    call jobsend(s:tidal_term_ghci, a:text . "\<CR>")
   elseif has('terminal')
-    call term_sendkeys(s:tidal_term, a:text . "\<CR>")
+    call term_sendkeys(s:tidal_term_ghci, a:text . "\<CR>")
   endif
 endfunction
 
