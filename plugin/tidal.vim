@@ -8,6 +8,16 @@ let s:parent_path = fnamemodify(expand("<sfile>"), ":p:h:s?/plugin??")
 " Default config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" Attempts to find a tidal boot file in this or any parent directory.
+function s:FindTidalBoot()
+  for name in ["BootTidal.hs", "Tidal.ghci", "boot.tidal"]
+    let tidal_boot_file = findfile(name, ".".';')
+    if !empty(tidal_boot_file)
+      return tidal_boot_file
+    endif
+  endfor
+endfunction
+
 if !exists("g:tidal_target")
   if has('nvim') || has('terminal')
     let g:tidal_target = "terminal"
@@ -37,7 +47,10 @@ if !exists("g:tidal_ghci")
 endif
 
 if !exists("g:tidal_boot")
-  let g:tidal_boot = s:parent_path . "/Tidal.ghci"
+  let g:tidal_boot = s:FindTidalBoot()
+  if empty(g:tidal_boot) && exists("g:tidal_boot_fallback")
+    let g:tidal_boot = g:tidal_boot_fallback
+  endif
 endif
 
 if filereadable(s:parent_path . "/.dirt-samples")
