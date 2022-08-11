@@ -18,6 +18,16 @@ function s:FindTidalBoot()
   endfor
 endfunction
 
+" Attempts to find a supercollider startup file in this or any parent dir.
+function s:FindScBoot()
+  for name in ["boot.sc", "boot.scd"]
+    let sc_boot_file = findfile(name, ".".';')
+    if !empty(sc_boot_file)
+      return sc_boot_file
+    endif
+  endfor
+endfunction
+
 if !exists("g:tidal_target")
   if has('nvim') || has('terminal')
     let g:tidal_target = "terminal"
@@ -62,10 +72,26 @@ if !exists("g:tidal_superdirt_enable")
   let g:tidal_superdirt_enable = 0
 endif
 
-if !exists("g:tidal_superdirt_start")
-  " A command that can be run from the terminal to start SuperDirt.
+if !exists("g:tidal_sclang")
+  let g:tidal_sclang = "sclang"
+endif
+
+" Allow vim-tidal to automatically start supercollider. Disabled by default.
+if !exists("g:tidal_sc_enable")
+  let g:tidal_sc_enable = 0
+endif
+
+if !exists("g:tidal_sc_boot")
+  let g:tidal_sc_boot = s:FindScBoot()
+  if empty(g:tidal_sc_boot) && exists("g:tidal_sc_boot_fallback")
+    let g:tidal_sc_boot = g:tidal_sc_boot_fallback
+  endif
+endif
+
+if !exists("g:tidal_sc_boot_cmd")
+  " A command that can be run from the terminal to start supercollider.
   " The default assumes `SuperDirt` is installed.
-  let g:tidal_superdirt_start = "sclang " . s:parent_path . "/SuperDirt-start.sc"
+  let g:tidal_sc_boot_cmd = g:tidal_sclang . " " . g:tidal_sc_boot
 endif
 
 if filereadable(s:parent_path . "/.dirt-samples")
@@ -111,7 +137,7 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let s:tidal_term_ghci = -1
-let s:tidal_term_superdirt = -1
+let s:tidal_term_sc = -1
 
 " NVim and VIM8 Terminal Implementation
 " =====================================
@@ -152,11 +178,11 @@ function! s:TerminalOpen()
             \ })
     endif
 
-    " Open a terminal with SuperDirt running.
-    if g:tidal_superdirt_enable == 1 && s:tidal_term_superdirt == -1
+    " Open a terminal with supercollider running.
+    if g:tidal_sc_enable == 1 && s:tidal_term_sc == -1
       execute "vert split"
-      let s:tidal_term_superdirt = term_start(g:tidal_superdirt_start, #{
-           \ term_name: 'superdirt',
+      let s:tidal_term_sc = term_start(g:tidal_sc_boot_cmd, #{
+           \ term_name: 'supercollider',
            \ term_rows: 10,
            \ norestore: 1,
            \ curwin: 1,
