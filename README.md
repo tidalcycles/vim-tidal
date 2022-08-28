@@ -8,10 +8,12 @@ terminal multiplexer, for communicating with between Vim and the Tidal
 interpreter.  It was originally based on
 [vim-slime](https://github.com/jpalardy/vim-slime).
 
-**New**: If you are using NeoVim, you can now use the Terminal instead of tmux.
-Read the Configuration section on how to enable it.
-
 ![](http://i.imgur.com/frOLFFI.gif)
+
+If you are using Vim8 or NeoVim, you can use the native Terminal feature instead
+of tmux. Read the Configuration section on how to enable it.
+
+[![asciicast](https://asciinema.org/a/224891.svg)](https://asciinema.org/a/224891)
 
 ## Getting Started ##
 
@@ -34,7 +36,6 @@ Read the Configuration section on how to enable it.
    You should see Vim flash that line for a second and a chunk of text appear on
    your Tidal interpreter.  If you already have SuperDirt or other synth running,
    you should hear a kick and a snare :)
-
 
 ## Install ##
 
@@ -122,7 +123,7 @@ First change your Plug line on your `.vimrc` to:
 Plug 'tidalcycles/vim-tidal', {'branch': 'tidal-0.9'}
 ```
 
-Then on Vim run `:PlugInstall` to update your plugin. 
+Then on Vim run `:PlugInstall` to update your plugin.
 
 
 ## Usage
@@ -186,7 +187,8 @@ These are some of the commands that can be run from Vim command line:
 
 * `:TidalHush`: Silences all streams by sending `hush`.
 
-* `:TidalGenerateCompletions {path}`: Generate dictionary for Dirt-Samples completion (path is optional)
+* `:TidalGenerateCompletions {path}`: Generate dictionary for Dirt-Samples
+  completion (path is optional).
 
 ### Default bindings
 
@@ -224,6 +226,18 @@ the lower pane.
 
 
 ## Configure ##
+
+### GHCI
+
+By default, `vim-tidal` uses the globally installed GHCI to launch the REPL.
+If you have installed Tidal through Stack (`stack install tidal`) or some other
+means, you can specify another command to use with `g:tidal_ghci`.
+
+For example, if one installed Tidal with Stack, they would use:
+
+```vim
+let g:tidal_ghci = "stack exec ghci --"
+```
 
 ### Default bindings ###
 

@@ -31,7 +31,7 @@ endfunction
 
 " change lines back into text
 function! Unlines(lines)
-    return join(a:lines, "\n") . "\n"
+    return join(a:lines, "\n")
 endfunction
 
 " vim slime handler
