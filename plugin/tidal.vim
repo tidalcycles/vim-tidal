@@ -81,9 +81,13 @@ if !exists("g:tidal_sc_enable")
   let g:tidal_sc_enable = 0
 endif
 
+if !exists("g:tidal_sc_boot_fallback")
+  let g:tidal_sc_boot_fallback = s:parent_path . "/boot.sc"
+endif
+
 if !exists("g:tidal_sc_boot")
   let g:tidal_sc_boot = s:FindScBoot()
-  if empty(g:tidal_sc_boot) && exists("g:tidal_sc_boot_fallback")
+  if empty(g:tidal_sc_boot)
     let g:tidal_sc_boot = g:tidal_sc_boot_fallback
   endif
 endif
