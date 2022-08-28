@@ -46,9 +46,13 @@ if !exists("g:tidal_ghci")
   let g:tidal_ghci = "ghci"
 endif
 
+if !exists("g:tidal_boot_fallback")
+  let g:tidal_boot_fallback = s:parent_path . "/Tidal.ghci"
+endif
+
 if !exists("g:tidal_boot")
   let g:tidal_boot = s:FindTidalBoot()
-  if empty(g:tidal_boot) && exists("g:tidal_boot_fallback")
+  if empty(g:tidal_boot)
     let g:tidal_boot = g:tidal_boot_fallback
   endif
 endif
