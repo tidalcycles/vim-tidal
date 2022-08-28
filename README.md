@@ -239,6 +239,22 @@ For example, if one installed Tidal with Stack, they would use:
 let g:tidal_ghci = "stack exec ghci --"
 ```
 
+### Tidal Boot File
+
+A "Tidal boot file" is a file that may be used to initialise Tidal within GHCI.
+A custom boot file can be specified using the `g:tidal_boot` variable.
+
+In the case that `g:tidal_boot` is unspecified, vim-tidal will traverse parent
+directories until one of either `BootTidal.hs`, `Tidal.ghci` or `boot.tidal` are
+found.
+
+If no tidal boot file can be found by traversing parent directories, tidal will
+check the `g:tidal_boot_fallback` variable for a fallback boot file. This
+variable is useful for specifying a default user-wide tidal boot file on your
+system, while still allowing each tidal project to optionally use their own
+dedicated, local tidal boot file. By default, `g:tidal_boot_fallback` will point
+to the `Tidal.ghci` file provided with this plugin.
+
 ### Default bindings ###
 
 By default, there are two normal keybindings and one for visual blocks using
