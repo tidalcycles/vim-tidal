@@ -8,6 +8,16 @@ let s:parent_path = fnamemodify(expand("<sfile>"), ":p:h:s?/plugin??")
 " Default config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" Attempts to find a tidal boot file in this or any parent directory.
+function s:FindTidalBoot()
+  for name in ["BootTidal.hs", "Tidal.ghci", "boot.tidal"]
+    let tidal_boot_file = findfile(name, ".".';')
+    if !empty(tidal_boot_file)
+      return tidal_boot_file
+    endif
+  endfor
+endfunction
+
 if !exists("g:tidal_target")
   if has('nvim') || has('terminal')
     let g:tidal_target = "terminal"
@@ -34,6 +44,17 @@ endif
 
 if !exists("g:tidal_ghci")
   let g:tidal_ghci = "ghci"
+endif
+
+if !exists("g:tidal_boot_fallback")
+  let g:tidal_boot_fallback = s:parent_path . "/Tidal.ghci"
+endif
+
+if !exists("g:tidal_boot")
+  let g:tidal_boot = s:FindTidalBoot()
+  if empty(g:tidal_boot)
+    let g:tidal_boot = g:tidal_boot_fallback
+  endif
 endif
 
 if filereadable(s:parent_path . "/.dirt-samples")
@@ -105,9 +126,8 @@ function! s:TerminalOpen()
     :exe "normal \<c-w>10-"
 
   elseif has('terminal')
-    let startup = s:parent_path . "/Tidal.ghci"
     execute "below split"
-    let s:tidal_term = term_start((g:tidal_ghci . " -ghci-script=" . startup), #{
+    let s:tidal_term = term_start((g:tidal_ghci . " -ghci-script=" . g:tidal_boot), #{
           \ term_name: 'tidal',
           \ term_rows: 10,
           \ norestore: 1,
