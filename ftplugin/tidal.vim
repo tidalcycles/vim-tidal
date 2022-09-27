@@ -31,7 +31,13 @@ endfunction
 
 " change lines back into text
 function! Unlines(lines)
-    return join(a:lines, "\n")
+    if g:tidal_target == "tmux"
+        " Without this, the user has to manually submit a newline each time
+        " they evaluate an expression with `ctrl e`.
+        return join(a:lines, "\n") . "\n"
+    else
+        return join(a:lines, "\n")
+    endif
 endfunction
 
 " vim slime handler
