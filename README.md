@@ -271,7 +271,39 @@ let g:tidal_no_mappings = 1
 See section Mappings on [ftplugin/tidal.vim](ftplugin/tidal.vim) and copy the
 bindings you like to your `.vimrc` file and modify them.
 
-### tmux target ###
+### Vim Terminal
+
+On both Vim (version 8 or above) and NeoVim, the default target in which we boot
+Tidal with GHCi is the native terminal.
+
+While it is the default, it can also be specified manually with the following:
+
+```vim
+let g:tidal_target = "terminal"
+```
+
+Open a file with a `.tidal` suffix, write and send a line of code to tidal, and
+the tidal terminal will open in a window below your editor.
+
+Use standard vim window navigation controls to focus the terminal (ie `<C-w> down/up`)
+
+You can learn more about the native Vim terminal here:
+
+https://vimhelp.org/terminal.txt.html
+
+### tmux (alternative to Vim terminal)
+
+Before Vim had native terminal support, this plugin provided a "tmux" target in
+order to allow for multiplexing the user's terminal via the 3rd party CLI tool.
+If you have `tmux` installed and you wish to use it instead of the native Vim
+terminal, you can enable this target with the following:
+
+```vim
+let g:tidal_target = "tmux"
+```
+
+This target will be enabled automatically in the case that the version of Vim in
+use does not have native terminal support.
 
 You can configure tmux socket name and target pane by typing `<localleader>c`
 or `:TidalConfig`.  This will prompt you first for the socket name, then for
@@ -321,26 +353,6 @@ use their own dedicated, local supercollider boot file.
 
 By default, `g:tidal_sc_boot_fallback` will point to the `boot.sc` file provided
 with this plugin which simply starts SuperDirt with the default settings.
-
-### NeoVim Terminal target ###
-
-If you are using NeoVim, you can ditch tmux and use the built-in terminal. Add the
-following line on your configuration file:
-
-```vim
-let g:tidal_target = "terminal"
-```
-
-Open a file with a `.tidal` suffix, write and send a line of code to tidal, and the tidal terminal will open in a window below your editor.
-
-Use standard vim window navigation controls to focus the terminal (ie `<C-w> down/up`)
-
-Quick overview of the terminal:
-
-1. The terminal defaults to insert mode.
-2. Enter terminal insert mode using eg. `i`.
-3. Exit terminal insert mode with `<C-\><C-n>`.
-4. You'll probably want to apply the `<A-k>` mappings mentioned in `:help terminal`.
 
 ### Miscellaneous ###
 
