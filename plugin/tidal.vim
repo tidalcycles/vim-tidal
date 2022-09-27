@@ -18,6 +18,16 @@ function s:FindTidalBoot()
   endfor
 endfunction
 
+" Attempts to find a supercollider startup file in this or any parent dir.
+function s:FindScBoot()
+  for name in ["boot.sc", "boot.scd"]
+    let sc_boot_file = findfile(name, ".".';')
+    if !empty(sc_boot_file)
+      return sc_boot_file
+    endif
+  endfor
+endfunction
+
 if !exists("g:tidal_target")
   if has('nvim') || has('terminal')
     let g:tidal_target = "terminal"
@@ -55,6 +65,37 @@ if !exists("g:tidal_boot")
   if empty(g:tidal_boot)
     let g:tidal_boot = g:tidal_boot_fallback
   endif
+endif
+
+if !exists("g:tidal_superdirt_enable")
+  " Allow vim-tidal to automatically start SuperDirt. Disabled by default.
+  let g:tidal_superdirt_enable = 0
+endif
+
+if !exists("g:tidal_sclang")
+  let g:tidal_sclang = "sclang"
+endif
+
+" Allow vim-tidal to automatically start supercollider. Disabled by default.
+if !exists("g:tidal_sc_enable")
+  let g:tidal_sc_enable = 0
+endif
+
+if !exists("g:tidal_sc_boot_fallback")
+  let g:tidal_sc_boot_fallback = s:parent_path . "/boot.sc"
+endif
+
+if !exists("g:tidal_sc_boot")
+  let g:tidal_sc_boot = s:FindScBoot()
+  if empty(g:tidal_sc_boot)
+    let g:tidal_sc_boot = g:tidal_sc_boot_fallback
+  endif
+endif
+
+if !exists("g:tidal_sc_boot_cmd")
+  " A command that can be run from the terminal to start supercollider.
+  " The default assumes `SuperDirt` is installed.
+  let g:tidal_sc_boot_cmd = g:tidal_sclang . " " . g:tidal_sc_boot
 endif
 
 if filereadable(s:parent_path . "/.dirt-samples")
@@ -99,18 +140,19 @@ endfunction
 " Terminal
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let s:tidal_term = -1
+let s:tidal_term_ghci = -1
+let s:tidal_term_sc = -1
 
 " NVim and VIM8 Terminal Implementation
 " =====================================
 function! s:TerminalOpen()
-  if s:tidal_term != -1
-    return
-  endif
-
   if has('nvim')
+    if s:tidal_term_ghci != -1
+      return
+    endif
+
     split term://tidal
-    let s:tidal_term = b:terminal_job_id
+    let s:tidal_term_ghci = b:terminal_job_id
 
     " Give tidal a moment to start up so the command doesn't show up at the top
     " unaesthetically.
@@ -126,23 +168,42 @@ function! s:TerminalOpen()
     :exe "normal \<c-w>10-"
 
   elseif has('terminal')
-    execute "below split"
-    let s:tidal_term = term_start((g:tidal_ghci . " -ghci-script=" . g:tidal_boot), #{
-          \ term_name: 'tidal',
-          \ term_rows: 10,
-          \ norestore: 1,
-          \ curwin: 1,
-          \ })
-    wincmd p " return focus to previous buffer
+    " Keep track of the current window number so we can switch back.
+    let current_win = winnr()
+
+    " Open a Terminal with GHCI with tidal booted.
+    if s:tidal_term_ghci == -1
+      execute "below split"
+      let s:tidal_term_ghci = term_start((g:tidal_ghci . " -ghci-script=" . g:tidal_boot), #{
+            \ term_name: 'tidal',
+            \ term_rows: 10,
+            \ norestore: 1,
+            \ curwin: 1,
+            \ })
+    endif
+
+    " Open a terminal with supercollider running.
+    if g:tidal_sc_enable == 1 && s:tidal_term_sc == -1
+      execute "vert split"
+      let s:tidal_term_sc = term_start(g:tidal_sc_boot_cmd, #{
+           \ term_name: 'supercollider',
+           \ term_rows: 10,
+           \ norestore: 1,
+           \ curwin: 1,
+           \ })
+    endif
+
+    " Return focus to the original window.
+    execute current_win .. "wincmd w"
   endif
 endfunction
 
 function! s:TerminalSend(config, text)
   call s:TerminalOpen()
   if has('nvim')
-    call jobsend(s:tidal_term, a:text . "\<CR>")
+    call jobsend(s:tidal_term_ghci, a:text . "\<CR>")
   elseif has('terminal')
-    call term_sendkeys(s:tidal_term, a:text . "\<CR>")
+    call term_sendkeys(s:tidal_term_ghci, a:text . "\<CR>")
   endif
 endfunction
 

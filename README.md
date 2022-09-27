@@ -294,6 +294,34 @@ on the window 1 and pane 0.  In that case you would need to add this line:
 let g:tidal_default_config = {"socket_name": "default", "target_pane": "omg:1.0"}
 ```
 
+### Optional Supercollider Terminal
+
+Vim-tidal provides an option for automatically running the supercollider
+command-line tool `sclang` alongside the Tidal GCHI terminal. By default this
+terminal is disabled, however it can be enabled with the following:
+
+```vim
+let g:tidal_sc_enable = 1
+```
+
+This can be useful to avoid the need to manually run sclang in a separate
+terminal or to open the supercollider IDE.
+
+A custom supercollider boot file can be specified by assigning its path to the
+`g:tidal_sc_boot` variable.
+
+In the case that `g:tidal_sc_boot` is unspecified, vim-tidal will traverse
+parent directories until one of either `boot.sc` or `boot.scd` are found.
+
+If no supercollider boot file can be found by traversing parent directories,
+tidal will check the `g:tidal_sc_boot_fallback` variable for a fallback boot
+file. This variable is useful for specifying a default user-wide supercollider
+boot file on your system, while still allowing each tidal project to optionally
+use their own dedicated, local supercollider boot file.
+
+By default, `g:tidal_sc_boot_fallback` will point to the `boot.sc` file provided
+with this plugin which simply starts SuperDirt with the default settings.
+
 ### NeoVim Terminal target ###
 
 If you are using NeoVim, you can ditch tmux and use the built-in terminal. Add the
