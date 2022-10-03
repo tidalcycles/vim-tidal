@@ -147,26 +147,31 @@ let s:tidal_term_sc = -1
 " =====================================
 function! s:TerminalOpen()
   if has('nvim')
-    if s:tidal_term_ghci != -1
-      return
+    let current_win = winnr()
+
+    if s:tidal_term_ghci == -1
+        execute "split term://" . g:tidal_ghci . " -ghci-script=" . g:tidal_boot
+        let s:tidal_term_ghci = b:terminal_job_id
+
+        " Give tidal a moment to start up so the command doesn't show up at the top
+        " unaesthetically.
+        " But this isn't very robust.
+        sleep 500m
+
+        " Make terminal scroll to follow output
+        :exe "normal G"
+        :exe "normal 10\<c-w>_"
     endif
 
-    split term://tidal
-    let s:tidal_term_ghci = b:terminal_job_id
+    if g:tidal_sc_enable == 1 && s:tidal_term_sc == -1
+        execute "vsplit term://" . g:tidal_sc_boot_cmd
+        let s:tidal_term_sc = b:terminal_job_id
 
-    " Give tidal a moment to start up so the command doesn't show up at the top
-    " unaesthetically.
-    " But this isn't very robust.
-    sleep 500m
+        " Make terminal scroll to follow output
+        :exe "normal G"
+    endif
 
-    " Make terminal scroll to follow output
-    :exe "normal G"
-
-    " Make small & on the bottom.
-    :exe "normal \<c-w>x"
-    :exe "normal \<c-w>_"
-    :exe "normal \<c-w>10-"
-
+    execute current_win .. "wincmd w"
   elseif has('terminal')
     " Keep track of the current window number so we can switch back.
     let current_win = winnr()
