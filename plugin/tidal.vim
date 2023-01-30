@@ -150,12 +150,12 @@ function! s:TerminalOpen()
     let current_win = winnr()
 
     if s:tidal_term_ghci == -1
+        " force terminal split to open below current pane
+        :exe "set splitbelow"
         execute "split term://" . g:tidal_ghci . " -ghci-script=" . g:tidal_boot
         let s:tidal_term_ghci = b:terminal_job_id
 
-        " Give tidal a moment to start up so the command doesn't show up at the top
-        " unaesthetically.
-        " But this isn't very robust.
+        " Give tidal a moment to start up so following commands can take effect
         sleep 500m
 
         " Make terminal scroll to follow output
