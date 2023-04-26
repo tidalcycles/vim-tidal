@@ -412,9 +412,35 @@ function! s:TidalGenerateCompletions(path)
   let &l:dictionary .= ',' . l:output_path
 endfunction
 
+function! s:TidalStart()
+  call s:TerminalOpen()
+endfunction
+
+function! s:TidalStop()
+  " TODO check if nvim and tmux work this way too
+  if s:tidal_term_ghci != -1
+    execute "bwipeout! " . s:tidal_term_ghci
+    let s:tidal_term_ghci = -1
+
+    if g:tidal_sc_enable == 1 && s:tidal_term_sc != -1
+      execute "bwipeout! " . s:tidal_term_sc
+      let s:tidal_term_sc = -1
+    endif
+  endif
+endfunction
+
+function! s:TidalRestart()
+  call s:TidalStop()
+  call s:TidalStart()
+endfunction
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Setup key bindings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+command! -nargs=0 TidalStart call s:TidalStart()
+command! -nargs=0 TidalStop call s:TidalStop()
+command! -nargs=0 TidalRestart call s:TidalRestart()
 
 command -bar -nargs=0 TidalConfig call s:TidalConfig()
 command -range -bar -nargs=0 TidalSend <line1>,<line2>call s:TidalSendRange()
