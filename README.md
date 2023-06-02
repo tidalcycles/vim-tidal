@@ -190,6 +190,12 @@ These are some of the commands that can be run from Vim command line:
 * `:TidalGenerateCompletions {path}`: Generate dictionary for Dirt-Samples
   completion (path is optional).
 
+* `:TidalStart`: Start GHCi/SuperCollider without running any commands
+
+* `:TidalStop`: Stop GHCi/SuperCollider immediately
+
+* `:TidalRestart`: Restart GHCi/SuperCollider
+
 ### Default bindings
 
 Using one of these key bindings you can send lines to Tidal:
