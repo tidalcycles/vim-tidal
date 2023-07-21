@@ -187,6 +187,8 @@ These are some of the commands that can be run from Vim command line:
 
 * `:TidalHush`: Silences all streams by sending `hush`.
 
+* `:TidalPanic`: Silences Tidal immediately by sending `panic`.
+
 * `:TidalGenerateCompletions {path}`: Generate dictionary for Dirt-Samples
   completion (path is optional).
 

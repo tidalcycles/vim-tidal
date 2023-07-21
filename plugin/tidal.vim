@@ -377,6 +377,10 @@ function! s:TidalHush()
   execute 'TidalSend1 hush'
 endfunction
 
+function! s:TidalPanic()
+  execute 'TidalSend1 panic'
+endfunction
+
 function! s:TidalSilence(stream)
   silent execute 'TidalSend1 d' . a:stream . ' silence'
 endfunction
@@ -421,6 +425,7 @@ command -range -bar -nargs=0 TidalSend <line1>,<line2>call s:TidalSendRange()
 command -nargs=+ TidalSend1 call s:TidalSend(<q-args>)
 
 command! -nargs=0 TidalHush call s:TidalHush()
+command! -nargs=0 TidalPanic call s:TidalPanic()
 command! -nargs=1 TidalSilence call s:TidalSilence(<args>)
 command! -nargs=1 TidalPlay call s:TidalPlay(<args>)
 command! -nargs=? TidalGenerateCompletions call s:TidalGenerateCompletions(<q-args>)
