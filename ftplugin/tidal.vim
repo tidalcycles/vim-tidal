@@ -74,6 +74,8 @@ if !exists("g:tidal_no_mappings") || !g:tidal_no_mappings
 
   nnoremap <buffer> <localleader>h :TidalHush<cr>
   nnoremap <buffer> <c-h> :TidalHush<cr>
+  nnoremap <buffer> <localleader>p :TidalPanic<cr>
+  nnoremap <buffer> <c-p> :TidalPanic<cr>
   let i = 1
   while i <= 9
     execute 'nnoremap <buffer> <localleader>'.i.'  :TidalSilence '.i.'<cr>'
